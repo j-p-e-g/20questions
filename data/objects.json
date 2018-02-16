@@ -1,0 +1,38 @@
+{
+    "objects": [
+        {
+            "name": "airplane",
+            "article": "an",
+            "properties": [
+                {
+                    "identifier": 12563,
+                    "value": 1
+                },
+                {
+                    "identifier": 7269,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "name": "banana",
+            "article": "a",
+            "properties": [
+                {
+                    "identifier": 7269,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "name": "moon",
+            "article": "the",
+            "properties": [
+                {
+                    "identifier": 12563,
+                    "value": 0
+                }
+            ]
+        }
+    ]
+}

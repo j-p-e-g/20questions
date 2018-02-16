@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QApplication
 class MainProgram():
     def __init__(self):
 
-        self.data = data.FakeData()
+        self.data = data.GameData()
 
         # create basic window widget
         self.main = gui.MainWindow(self.data)

@@ -1,6 +1,9 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+PROGRAM_ICON_PATH = "images/questionExclamationMark.png"
+TICK_ICON_PATH = "images/tickMark.png"
+
 # implement scrollable window
 class ScrollBar(QWidget):
     def __init__(self, _data):
@@ -39,10 +42,12 @@ class MessageHistoryWindow(QTabWidget):
         self.show()
 
     def initMe(self):
+        global PROGRAM_ICON_PATH
+
         # pos(x, y), size(width, height)
         self.setGeometry(1000, 150, 300, 500)
         self.setWindowTitle("Message History")
-        self.setWindowIcon(QIcon("images/questionExclamationMark.png"))
+        self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
         tab = ScrollBar(self.mainWindow.data)
         self.addTab(tab, "ScrollBar")
@@ -62,10 +67,12 @@ class DebugWindow(QTabWidget):
         self.show()
 
     def initMe(self):
+        global PROGRAM_ICON_PATH
+
         # pos(x, y), size(width, height)
         self.setGeometry(50, 300, 300, 300)
         self.setWindowTitle("Debug window")
-        self.setWindowIcon(QIcon("images/questionExclamationMark.png"))
+        self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
         tabObj = QWidget()
         tabProp = QWidget()
@@ -89,21 +96,24 @@ class MainWindow(QMainWindow):
         self.show()
 
     def initMe(self):
+        global PROGRAM_ICON_PATH
+        global TICK_ICON_PATH
+
         # pos(x, y), size(width, height)
         self.setGeometry(400, 200, 500, 400)
         self.setWindowTitle("Main Window")
-        self.setWindowIcon(QIcon("images/questionExclamationMark.png"))
+        self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
         self.statusBar().showMessage("Status bar")
 
         # set up exit action
-        self.msgAction = QAction(QIcon("images/tickMark.png"), "&Show History", self)
+        self.msgAction = QAction(QIcon(TICK_ICON_PATH), "&Show History", self)
         self.msgAction.setIconVisibleInMenu(False)
         self.msgAction.setShortcut("Ctrl+M")
         self.msgAction.setStatusTip("Show message history")
         self.msgAction.triggered.connect(self.onToggleMessageHistory)
 
-        self.debugAction = QAction(QIcon("images/tickMark.png"), "&Show Debug", self)
+        self.debugAction = QAction(QIcon(TICK_ICON_PATH), "&Show Debug", self)
         self.debugAction.setIconVisibleInMenu(False)
         self.debugAction.setShortcut("Ctrl+D")
         self.debugAction.setStatusTip("Show debug window")
