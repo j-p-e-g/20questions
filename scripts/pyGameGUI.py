@@ -35,12 +35,12 @@ class BoxWidget(QWidget):
 
 # application main window
 class MainWindow(QMainWindow):
-    def __init__(self, _data):
+    def __init__(self, _logic):
         super().__init__()
 
         self.msgWindowVisible = False
         self.debugWindowVisible = False
-        self.data = _data
+        self.logic = _logic
         self.state = GameState.START
 
         self.initWindow()
@@ -98,9 +98,13 @@ class MainWindow(QMainWindow):
         self.show()
 
     def displayStartState(self):
-        print("start state")
+        #self.logic.clearMessageHistory()
+        self.logic.addFormattedMessage("New round", "green")
 
-        label = QLabel("Think of an object", self)
+        msg = "Think of an object"
+        self.logic.addProgramMessage(msg)
+
+        label = QLabel(msg, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
@@ -112,14 +116,14 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def displayQuestionState(self):
-        print("question state")
-
         # TODO: get identifier from data
         identifier = 25368
         modalVerb = "is"
         suffix = "an animal"
 
         question = modalVerb.capitalize() + " it " + suffix + "?"
+        self.logic.addProgramMessage(question)
+
         label = QLabel(question, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
@@ -144,13 +148,13 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def displayGuessState(self):
-        print("guess state")
-
         # TODO: get guess from data
         article = "a"
         noun = "banana"
 
         guess = "I think it's " + article + " " + noun
+        self.logic.addProgramMessage(guess)
+
         label = QLabel(guess, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
@@ -167,9 +171,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def displaySolutionState(self):
-        print("solution state")
-
         query = "I give up! What is it?"
+        self.logic.addProgramMessage(query)
+
         label = QLabel(query, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
@@ -195,22 +199,25 @@ class MainWindow(QMainWindow):
         self.displayState()
 
     def onStart(self):
+        self.logic.addPlayerMessage(self.sender().text())
         self.changeState(GameState.QUESTION)
 
     def onAnswerQuestion(self):
+        self.logic.addPlayerMessage(self.sender().text())
+
         # TODO: pass answer to data
         # TODO: actually keep asking question until we either run out of questions or identify the object
         self.changeState(GameState.GUESS)
 
     def onAnswerGuess(self):
+        self.logic.addPlayerMessage(self.sender().text())
+
         if self.sender().text() == "Wrong":
             # TODO: actually this is only needed if we have no further guesses
             self.changeState(GameState.SOLUTION)
         else:
             # TODO: pass result to data and save
             self.changeState(GameState.START)
-
-        self.displayState()
 
     def onSolution(self):
         if len(self.solution.text()) > 0:

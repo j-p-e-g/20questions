@@ -1,29 +1,25 @@
 import json
-from enum import Enum
+from pyGameGlobals import KnowledgeValues
 
-class KnowledgeValues(Enum):
-    UNKNOWN = 0
-    YES = 1
-    NO = 2
-    MAYBE = 3
+OBJECTS_DATA_FILE = "data/objects.json"
+PROPERTIES_DATA_FILE  = "data/properties.json"
+OBJECTS_REQUIRED_ATTRIBUTES = ["name", "article", "properties"]
+PROPERTIES_REQUIRED_ATTRIBUTES = ["identifier", "modal_verb", "suffix"]
 
 class GameData():
     def __init__(self):
-        self.objectsDataFileName = "data/objects.json"
-        self.propertiesDataFileName = "data/properties.json"
+        self.requiredObjectAttributes = OBJECTS_REQUIRED_ATTRIBUTES
+        self.requiredPropertyAttributes = PROPERTIES_REQUIRED_ATTRIBUTES
+
         self.objectsMainAttribute = "objects"
         self.propertiesMainAttribute = "properties"
-        self.requiredObjectAttributes = ["name", "article", "properties"]
-        self.requiredPropertyAttributes = ["identifier", "modal_verb", "suffix"]
 
         self.objects = {}
         self.properties = {}
         self.propertyValues = {}
-        self.messageHistory = []
 
         self.setupPropertyValues()
         self.initData()
-        self.setupFakeMessageHistory()
 
     def initData(self):
         # self.setupFakeObjectsData()
@@ -46,25 +42,13 @@ class GameData():
         self.propertyValues[KnowledgeValues.NO] = "no"
         self.propertyValues[KnowledgeValues.MAYBE] = "it depends"
 
-    # current session messages
-    def addMessage(self, value):
-        self.messageHistory.append(value)
-
-    def setupFakeMessageHistory(self):
-        for i in range(10):
-            self.addMessage("test")
-            self.addMessage("blablabla")
-            self.addMessage("test xyz")
-            self.addMessage("xyzzy")
-            self.addMessage("testitest")
-
     # read/write object data
     def readObjects(self):
         try:
-            with open(self.objectsDataFileName) as infile:
+            with open(OBJECTS_DATA_FILE) as infile:
                 self.objects = json.load(infile)
         except FileNotFoundError:
-            print("ERROR: Trying to open non-existing file " + self.objectsDataFileName + "!")
+            print("ERROR: Trying to open non-existing file " + OBJECTS_DATA_FILE + "!")
 
     def setupFakeObjectsData(self):
         self.objects[self.objectsMainAttribute] = []
@@ -119,26 +103,26 @@ class GameData():
                 skip = False
                 for attr in self.requiredObjectAttributes:
                     if not attr in obj:
-                        print("Warning: Missing key '" + attr + "' for entry " + str(count) + " in " + self.objectsDataFileName)
+                        print("Warning: Missing key '" + attr + "' for entry " + str(count) + " in " + OBJECTS_DATA_FILE)
                         skip = True
 
                 if not skip:
                     print(obj["article"] + " " + obj["name"])
 
         else:
-            print("ERROR: Missing '" + self.objectsMainAttribute + "' key in " + self.objectsDataFileName)
+            print("ERROR: Missing '" + self.objectsMainAttribute + "' key in " + OBJECTS_DATA_FILE)
 
     def saveObjects(self):
-        with open(self.objectsDataFileName, "w") as outfile:
+        with open(OBJECTS_DATA_FILE, "w") as outfile:
             json.dump(self.objects, outfile, indent=4)
 
     # read/write properties data
     def readProperties(self):
         try:
-            with open(self.propertiesDataFileName) as infile:
+            with open(PROPERTIES_DATA_FILE) as infile:
                 self.properties = json.load(infile)
         except FileNotFoundError:
-            print("ERROR: Trying to open non-existing file " + self.propertiesDataFileName + "!")
+            print("ERROR: Trying to open non-existing file " + PROPERTIES_DATA_FILE + "!")
 
     def setupFakePropertiesData(self):
         self.properties[self.propertiesMainAttribute] = []
@@ -164,15 +148,15 @@ class GameData():
                 skip = False
                 for attr in self.requiredPropertyAttributes:
                     if not attr in prop:
-                        print("Warning: Missing key '" + attr + "' for entry " + str(count) + " in " + self.propertiesDataFileName)
+                        print("Warning: Missing key '" + attr + "' for entry " + str(count) + " in " + PROPERTIES_DATA_FILE)
                         skip = True
 
                 if not skip:
                     print(str(prop["identifier"]) + " " + prop["modal_verb"] + " " + prop["suffix"])
 
         else:
-            print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + self.propertiesDataFileName)
+            print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + PROPERTIES_DATA_FILE)
 
     def saveProperties(self):
-        with open(self.propertiesDataFileName, "w") as outfile:
+        with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
