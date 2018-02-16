@@ -113,6 +113,7 @@ class GameData():
             print("ERROR: Missing '" + self.objectsMainAttribute + "' key in " + OBJECTS_DATA_FILE)
 
     def saveObjects(self):
+        print("saving objects")
         with open(OBJECTS_DATA_FILE, "w") as outfile:
             json.dump(self.objects, outfile, indent=4)
 
@@ -158,5 +159,22 @@ class GameData():
             print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + PROPERTIES_DATA_FILE)
 
     def saveProperties(self):
+        print("saving properties")
         with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
+
+    def constructQuestion(self, _propIdentifier):
+        for prop in self.properties[self.propertiesMainAttribute]:
+            if prop["identifier"] == _propIdentifier:
+                question = prop["modal_verb"].capitalize() + " it " + prop["suffix"] + "?"
+                return question
+
+        return ""
+
+    def constructGuess(self, _objectName):
+        for prop in self.objects[self.objectsMainAttribute]:
+            if prop["name"] == _objectName:
+                guess = "I think it's " + prop["article"] + " " + prop["name"] + "."
+                return guess
+
+        return ""
