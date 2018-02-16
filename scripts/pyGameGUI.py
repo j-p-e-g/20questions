@@ -18,6 +18,7 @@ class BoxWidget(QWidget):
         super().__init__()
 
         vLayout = QVBoxLayout()
+        vLayout.setSpacing(5)
         vLayout.addStretch(1)
 
         for widget in _widgets:
@@ -26,6 +27,7 @@ class BoxWidget(QWidget):
         vLayout.addStretch(1)
 
         hLayout = QHBoxLayout()
+        hLayout.setSpacing(5)
         hLayout.addStretch(1)
         hLayout.addLayout(vLayout)
         hLayout.addStretch(1)
@@ -47,11 +49,12 @@ class MainWindow(QMainWindow):
         self.logic.guessEvent.onRoundFinished.connect(self.onRoundFinished)
 
         self.data = self.logic.data
+        self.phrasing = self.data.phrasing
+
         self.messageHistory = self.logic.messageHistory
-        self.state = GameState.START
 
         self.initWindow()
-        self.displayState()
+        self.displayStartState()
 
     def initWindow(self):
         global PROGRAM_ICON_PATH
@@ -78,7 +81,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def onRoundFinished(self):
-        self.changeState(GameState.START)
+        self.displayStartState()
 
     def closeEvent(self, event):
         # close the entire application even if other windows are still open
@@ -105,37 +108,24 @@ class MainWindow(QMainWindow):
         file.addAction(self.msgAction)
         file.addAction(self.debugAction)
 
-    def displayState(self):
-        if self.state == GameState.START:
-            self.displayStartState()
-        elif self.state == GameState.QUESTION:
-            self.displayQuestionState()
-        elif self.state == GameState.GUESS:
-            self.displayGuessState()
-        elif self.state == GameState.SOLUTION:
-            self.displaySolutionState()
-        elif self.state == GameState.DISTINCTION:
-            self.displayDistinctionState()
-
-        self.show()
-
     def displayStartState(self):
         self.messageHistory.addFormattedMessage("New round", "green")
 
-        msg = self.data.constructInitialPrompt()
+        msg = self.phrasing.constructInitialPrompt()
         self.messageHistory.addProgramMessage(msg)
 
         label = QLabel(msg, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonText = self.data.constructInitialPromptButtonText()
+        buttonText = self.phrasing.constructInitialPromptButtonText()
         button = QPushButton(buttonText, self)
         button.setFont(QFont("Arial", 12))
         button.clicked.connect(self.onStart)
 
         widget = BoxWidget([label, button])
         self.setCentralWidget(widget)
+        self.show()
 
     def displayQuestionState(self, _question):
         self.messageHistory.addProgramMessage(_question)
@@ -144,28 +134,35 @@ class MainWindow(QMainWindow):
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonYesText = self.data.constructAnswerButtonText(KnowledgeValues.YES)
+        buttonYesText = self.phrasing.constructAnswerButtonText(KnowledgeValues.YES)
+        buttonNoText = self.phrasing.constructAnswerButtonText(KnowledgeValues.NO)
+        buttonMaybeText = self.phrasing.constructAnswerButtonText(KnowledgeValues.MAYBE)
+        buttonUnknownText = self.phrasing.constructAnswerButtonText(KnowledgeValues.UNKNOWN)
+        maxTextWidth = 10*max(len(buttonYesText), len(buttonNoText), len(buttonMaybeText), len(buttonUnknownText))
+
         buttonYes = QPushButton(buttonYesText, self)
         buttonYes.setFont(QFont("Arial", 12))
         buttonYes.clicked.connect(self.onAnswerQuestion)
+        buttonYes.setMinimumWidth(maxTextWidth)
 
-        buttonNoText = self.data.constructAnswerButtonText(KnowledgeValues.NO)
         buttonNo = QPushButton(buttonNoText, self)
         buttonNo.setFont(QFont("Arial", 12))
         buttonNo.clicked.connect(self.onAnswerQuestion)
+        buttonNo.setMinimumWidth(maxTextWidth)
 
-        buttonMaybeText = self.data.constructAnswerButtonText(KnowledgeValues.MAYBE)
         buttonMaybe = QPushButton(buttonMaybeText, self)
         buttonMaybe.setFont(QFont("Arial", 12))
         buttonMaybe.clicked.connect(self.onAnswerQuestion)
+        buttonMaybe.setMinimumWidth(maxTextWidth)
 
-        buttonUnknownText = self.data.constructAnswerButtonText(KnowledgeValues.UNKNOWN)
         buttonUnknown = QPushButton(buttonUnknownText, self)
         buttonUnknown.setFont(QFont("Arial", 12))
         buttonUnknown.clicked.connect(self.onAnswerQuestion)
+        buttonUnknown.setMinimumWidth(maxTextWidth)
 
         widget = BoxWidget([label, buttonYes, buttonNo, buttonMaybe, buttonUnknown])
         self.setCentralWidget(widget)
+        self.show()
 
     def displayGuessState(self, _guess):
         self.messageHistory.addProgramMessage(_guess)
@@ -174,21 +171,22 @@ class MainWindow(QMainWindow):
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonYesText = self.data.constructGuessResponseButtonText(True)
+        buttonYesText = self.phrasing.constructGuessResponseButtonText(True)
         buttonYes = QPushButton(buttonYesText, self)
         buttonYes.setFont(QFont("Arial", 12))
         buttonYes.clicked.connect(self.onAnswerGuessTrue)
 
-        buttonNoText = self.data.constructGuessResponseButtonText(False)
+        buttonNoText = self.phrasing.constructGuessResponseButtonText(False)
         buttonNo = QPushButton(buttonNoText, self)
         buttonNo.setFont(QFont("Arial", 12))
         buttonNo.clicked.connect(self.onAnswerGuessFalse)
 
         widget = BoxWidget([label, buttonYes, buttonNo])
         self.setCentralWidget(widget)
+        self.show()
 
     def displaySolutionState(self):
-        query = self.data.constructSolutionRequest()
+        query = self.phrasing.constructSolutionRequest()
         self.messageHistory.addProgramMessage(query)
 
         label = QLabel(query, self)
@@ -199,35 +197,33 @@ class MainWindow(QMainWindow):
         noNumRegex = QRegExp("[a-zA-Z\s-]+")
         self.solutionTextBox.setValidator(QRegExpValidator(noNumRegex, self.solutionTextBox))
 
-        buttonText = self.data.constructSolutionButtonText()
+        buttonText = self.phrasing.constructSolutionButtonText()
         button = QPushButton(buttonText, self)
         button.setFont(QFont("Arial", 12))
         button.clicked.connect(self.onSolutionSent)
 
         widget = BoxWidget([label, self.solutionTextBox, button])
         self.setCentralWidget(widget)
+        self.show()
 
     def displayDistinctionState(self):
         print("distinction state")
         # TODO: allow specifying new properties to distinguish between objects
-        self.changeState(GameState.START)
-
-    def changeState(self, newState):
-        self.state = newState
-        self.displayState()
+        self.displayStartState()
 
     def onStart(self):
         self.messageHistory.addPlayerMessage(self.sender().text())
         self.logic.inputEvent.onGameStart.emit()
 
     def onAnswerQuestion(self):
-        self.messageHistory.addPlayerMessage(self.sender().text())
-        self.logic.inputEvent.onQuestionAnswered.emit(KnowledgeValues.YES)
+        buttonText = self.sender().text()
+        self.messageHistory.addPlayerMessage(buttonText)
+        self.logic.inputEvent.onQuestionAnswered.emit(buttonText)
 
     def onAnswerGuessTrue(self):
         self.messageHistory.addPlayerMessage(self.sender().text())
         self.logic.inputEvent.onGuessReaction.emit(True)
-        self.changeState(GameState.START)
+        self.displayStartState()
 
     def onAnswerGuessFalse(self):
         self.messageHistory.addPlayerMessage(self.sender().text())
@@ -236,7 +232,6 @@ class MainWindow(QMainWindow):
     def onSolutionSent(self):
         solution = self.solutionTextBox.text()
         if len(solution) > 0:
-#            self.changeState(GameState.DISTINCTION)
             self.messageHistory.addPlayerMessage(solution)
             self.logic.inputEvent.onSolutionSent.emit(solution)
         else:

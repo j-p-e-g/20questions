@@ -6,7 +6,7 @@ from pyGameGlobals import KnowledgeValues
 
 class InputEvent(QObject):
     onGameStart = pyqtSignal()
-    onQuestionAnswered = pyqtSignal(int)
+    onQuestionAnswered = pyqtSignal(str)
     onGuessReaction = pyqtSignal(bool)
     onSolutionSent = pyqtSignal(str)
 
@@ -33,7 +33,6 @@ class GameLogic():
         self.initRound()
 
     def initRound(self):
-        print("initRound")
         self.previousQuestion = 0
         self.guesses = []
 
@@ -44,26 +43,42 @@ class GameLogic():
             self.properties[prop["identifier"]] = propEntry
 
     def startRound(self):
-        print("startRound")
+        self.nextRun()
 
+    def nextRun(self):
         # 1. iterate over all properties for the current guess
         # 2. assign weights to each object
         # 3. if there's a single object matching all properties, guess!
         # 4. otherwise, ask a question that hasn't been asked before
         # 5. if all questions were asked and no object matches, ask for the solution
-        self.nextRun()
 
-    def nextRun(self):
+        # ask questions to narrow down the solution space
+        if self.tryFindGoodQuestion():
+            return
+
+        # guess the object
+        if self.tryFindGoodGuess():
+            return
+
+        # if nothing else works, ask for the solution
+        self.guessEvent.onRequestSolution.emit()
+
+    def tryFindGoodQuestion(self):
         for identifier in self.properties:
             entry = self.properties[identifier]
-            if not entry["tried"]:
-                question = self.data.constructQuestion(identifier)
-                if question != "":
-                    self.previousQuestion = identifier
-                    self.guessEvent.onQuestionSent.emit(question)
-                    entry["tried"] = True
-                    return
+            if entry["tried"]:
+                continue
 
+            question = self.data.constructQuestion(identifier)
+            if question != "":
+                self.previousQuestion = identifier
+                self.guessEvent.onQuestionSent.emit(question)
+                entry["tried"] = True
+                return True
+
+        return False
+
+    def tryFindGoodGuess(self):
         try:
             objects = self.data.objects[self.data.objectsMainAttribute]
             for obj in objects:
@@ -71,21 +86,27 @@ class GameLogic():
                     self.messageHistory.addErrorMessage("Key 'name' not found in data objects")
                 else:
                     objName = obj["name"]
-                    if not objName in self.guesses:
-                        guess = self.data.constructGuess(objName)
-                        if guess != "":
-                            self.guesses.append(objName)
-                            self.guessEvent.onGuessSent.emit(guess)
-                            return
+                    if objName in self.guesses:
+                        continue
+
+                    guess = self.data.constructGuess(objName)
+                    if guess != "":
+                        self.guesses.append(objName)
+                        self.guessEvent.onGuessSent.emit(guess)
+                        return True
+
         except KeyError:
             self.messageHistory.addErrorMessage("'" + self.data.objectsMainAttribute + "' not found in data objects")
 
-        self.guessEvent.onRequestSolution.emit()
+        return False
 
-    def onReceivedQuestionAnswer(self, _value):
+    def onReceivedQuestionAnswer(self, _buttonText):
+        value = self.data.phrasing.getKnowledgeValueForText(_buttonText)
+        print("onReceivedQuestionAnswer: " + _buttonText + " -> " + str(value))
+
         if self.previousQuestion in self.properties:
             entry = self.properties[self.previousQuestion]
-            entry["value"] = _value
+            entry["value"] = value
         else:
             errorMsg = "Identifier '" + str(self.previousQuestion) + "' not found in Logic properties!"
             print(errorMsg)
@@ -116,7 +137,8 @@ class GameLogic():
         self.guessEvent.onRoundFinished.emit()
 
     def updateData(self, _solution):
-        # TODO: if solution already in list of object, update properties
+        # TODO: if solution already in list of objects, update properties
         #       else: add new object and the stored property values
+
         self.data.saveObjects()
         self.data.saveProperties()

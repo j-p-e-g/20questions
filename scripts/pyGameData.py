@@ -1,4 +1,5 @@
 import json
+from pyGamePhrasing import *
 from pyGameGlobals import KnowledgeValues
 
 OBJECTS_DATA_FILE = "data/objects.json"
@@ -13,6 +14,8 @@ class GameData():
 
         self.objectsMainAttribute = "objects"
         self.propertiesMainAttribute = "properties"
+
+        self.phrasing = GamePhrasing()
 
         self.objects = {}
         self.properties = {}
@@ -155,48 +158,16 @@ class GameData():
         with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
 
-    def constructInitialPrompt(self):
-        return "Think of an object (not an abstract concept)"
-
-    def constructInitialPromptButtonText(self):
-        return "Got it!"
-
-    def constructAnswerButtonText(self, _value):
-        if _value == KnowledgeValues.UNKNOWN:
-            return "I don't know"
-        elif _value == KnowledgeValues.YES:
-            return "Yes"
-        elif _value == KnowledgeValues.NO:
-            return "No"
-        elif _value == KnowledgeValues.MAYBE:
-            return "Sometimes/It depends"
-
-        return ""
-
-    def constructGuessResponseButtonText(self, _result):
-        if _result:
-            return "Yes, that's it!"
-        else:
-            return "No"
-
     def constructQuestion(self, _propIdentifier):
         for prop in self.properties[self.propertiesMainAttribute]:
             if prop["identifier"] == _propIdentifier:
-                question = prop["modal_verb"].capitalize() + " it " + prop["suffix"] + "?"
-                return question
+                return self.phrasing.constructQuestion(prop["modal_verb"], prop["suffix"])
 
         return ""
 
     def constructGuess(self, _objectName):
         for prop in self.objects[self.objectsMainAttribute]:
             if prop["name"] == _objectName:
-                guess = "I think it's " + prop["article"] + " " + prop["name"] + "."
-                return guess
+                return self.phrasing.constructGuess(prop["article"], prop["name"])
 
         return ""
-
-    def constructSolutionRequest(self):
-        return "I give up! What is it?"
-
-    def constructSolutionButtonText(self):
-        return "Send"
