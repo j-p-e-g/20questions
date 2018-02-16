@@ -44,7 +44,10 @@ class MainWindow(QMainWindow):
         self.logic.guessEvent.onGuessSent.connect(self.onReceivedGuess)
         self.logic.guessEvent.onQuestionSent.connect(self.onReceivedQuestion)
         self.logic.guessEvent.onRequestSolution.connect(self.onSolutionRequested)
+        self.logic.guessEvent.onRoundFinished.connect(self.onRoundFinished)
 
+        self.data = self.logic.data
+        self.messageHistory = self.logic.messageHistory
         self.state = GameState.START
 
         self.initWindow()
@@ -63,20 +66,19 @@ class MainWindow(QMainWindow):
         self.setupMenu()
 
     def onReceivedGuess(self, _guess):
-        print("onReceivedGuess")
-#        self.changeState(GameState.GUESS)
         self.displayGuessState(_guess)
         self.show()
 
     def onReceivedQuestion(self, _question):
-        print("onReceivedQuestion")
-#        self.changeState(GameState.QUESTION)
         self.displayQuestionState(_question)
         self.show()
 
     def onSolutionRequested(self):
         self.displaySolutionState()
         self.show()
+
+    def onRoundFinished(self):
+        self.changeState(GameState.START)
 
     def closeEvent(self, event):
         # close the entire application even if other windows are still open
@@ -118,17 +120,17 @@ class MainWindow(QMainWindow):
         self.show()
 
     def displayStartState(self):
-        #self.logic.clearMessageHistory()
-        self.logic.addFormattedMessage("New round", "green")
+        self.messageHistory.addFormattedMessage("New round", "green")
 
-        msg = "Think of an object"
-        self.logic.addProgramMessage(msg)
+        msg = self.data.constructInitialPrompt()
+        self.messageHistory.addProgramMessage(msg)
 
         label = QLabel(msg, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        button = QPushButton("Got it!", self)
+        buttonText = self.data.constructInitialPromptButtonText()
+        button = QPushButton(buttonText, self)
         button.setFont(QFont("Arial", 12))
         button.clicked.connect(self.onStart)
 
@@ -136,25 +138,29 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def displayQuestionState(self, _question):
-        self.logic.addProgramMessage(_question)
+        self.messageHistory.addProgramMessage(_question)
 
         label = QLabel(_question, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonYes = QPushButton("Yes", self)
+        buttonYesText = self.data.constructAnswerButtonText(KnowledgeValues.YES)
+        buttonYes = QPushButton(buttonYesText, self)
         buttonYes.setFont(QFont("Arial", 12))
         buttonYes.clicked.connect(self.onAnswerQuestion)
 
-        buttonNo = QPushButton("No", self)
+        buttonNoText = self.data.constructAnswerButtonText(KnowledgeValues.NO)
+        buttonNo = QPushButton(buttonNoText, self)
         buttonNo.setFont(QFont("Arial", 12))
         buttonNo.clicked.connect(self.onAnswerQuestion)
 
-        buttonMaybe = QPushButton("Maybe", self)
+        buttonMaybeText = self.data.constructAnswerButtonText(KnowledgeValues.MAYBE)
+        buttonMaybe = QPushButton(buttonMaybeText, self)
         buttonMaybe.setFont(QFont("Arial", 12))
         buttonMaybe.clicked.connect(self.onAnswerQuestion)
 
-        buttonUnknown = QPushButton("I don't know", self)
+        buttonUnknownText = self.data.constructAnswerButtonText(KnowledgeValues.UNKNOWN)
+        buttonUnknown = QPushButton(buttonUnknownText, self)
         buttonUnknown.setFont(QFont("Arial", 12))
         buttonUnknown.clicked.connect(self.onAnswerQuestion)
 
@@ -162,40 +168,43 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def displayGuessState(self, _guess):
-        self.logic.addProgramMessage(_guess)
+        self.messageHistory.addProgramMessage(_guess)
 
         label = QLabel(_guess, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonYes = QPushButton("Correct", self)
+        buttonYesText = self.data.constructGuessResponseButtonText(True)
+        buttonYes = QPushButton(buttonYesText, self)
         buttonYes.setFont(QFont("Arial", 12))
-        buttonYes.clicked.connect(self.onAnswerGuess)
+        buttonYes.clicked.connect(self.onAnswerGuessTrue)
 
-        buttonNo = QPushButton("Wrong", self)
+        buttonNoText = self.data.constructGuessResponseButtonText(False)
+        buttonNo = QPushButton(buttonNoText, self)
         buttonNo.setFont(QFont("Arial", 12))
-        buttonNo.clicked.connect(self.onAnswerGuess)
+        buttonNo.clicked.connect(self.onAnswerGuessFalse)
 
         widget = BoxWidget([label, buttonYes, buttonNo])
         self.setCentralWidget(widget)
 
     def displaySolutionState(self):
-        query = "I give up! What is it?"
-        self.logic.addProgramMessage(query)
+        query = self.data.constructSolutionRequest()
+        self.messageHistory.addProgramMessage(query)
 
         label = QLabel(query, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        self.solution = QLineEdit(self)
+        self.solutionTextBox = QLineEdit(self)
         noNumRegex = QRegExp("[a-zA-Z\s-]+")
-        self.solution.setValidator(QRegExpValidator(noNumRegex, self.solution))
+        self.solutionTextBox.setValidator(QRegExpValidator(noNumRegex, self.solutionTextBox))
 
-        button = QPushButton("Send", self)
+        buttonText = self.data.constructSolutionButtonText()
+        button = QPushButton(buttonText, self)
         button.setFont(QFont("Arial", 12))
-        button.clicked.connect(self.onSolution)
+        button.clicked.connect(self.onSolutionSent)
 
-        widget = BoxWidget([label, self.solution, button])
+        widget = BoxWidget([label, self.solutionTextBox, button])
         self.setCentralWidget(widget)
 
     def displayDistinctionState(self):
@@ -208,32 +217,32 @@ class MainWindow(QMainWindow):
         self.displayState()
 
     def onStart(self):
-        self.logic.addPlayerMessage(self.sender().text())
+        self.messageHistory.addPlayerMessage(self.sender().text())
         self.logic.inputEvent.onGameStart.emit()
-#        self.changeState(GameState.QUESTION)
 
     def onAnswerQuestion(self):
-        self.logic.addPlayerMessage(self.sender().text())
+        self.messageHistory.addPlayerMessage(self.sender().text())
         self.logic.inputEvent.onQuestionAnswered.emit(KnowledgeValues.YES)
 
-        # TODO: pass answer to data
-        # TODO: actually keep asking question until we either run out of questions or identify the object
-#        self.changeState(GameState.GUESS)
+    def onAnswerGuessTrue(self):
+        self.messageHistory.addPlayerMessage(self.sender().text())
+        self.logic.inputEvent.onGuessReaction.emit(True)
+        self.changeState(GameState.START)
 
-    def onAnswerGuess(self):
-        self.logic.addPlayerMessage(self.sender().text())
+    def onAnswerGuessFalse(self):
+        self.messageHistory.addPlayerMessage(self.sender().text())
+        self.logic.inputEvent.onGuessReaction.emit(False)
 
-        if self.sender().text() == "Wrong":
-            self.logic.inputEvent.onGuessReaction.emit(False)
+    def onSolutionSent(self):
+        solution = self.solutionTextBox.text()
+        if len(solution) > 0:
+#            self.changeState(GameState.DISTINCTION)
+            self.messageHistory.addPlayerMessage(solution)
+            self.logic.inputEvent.onSolutionSent.emit(solution)
         else:
-            self.logic.inputEvent.onGuessReaction.emit(True)
-            self.changeState(GameState.START)
-
-    def onSolution(self):
-        if len(self.solution.text()) > 0:
-            self.changeState(GameState.DISTINCTION)
-        else:
-            print("Type the name of your object")
+            msg = "Type the name of your object"
+            self.messageHistory.addProgramMessage(msg)
+            print(msg)
 
     def onToggleMessageHistory(self):
         if self.msgWindowVisible:

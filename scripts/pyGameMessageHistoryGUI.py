@@ -5,11 +5,11 @@ from pyGameGlobals import *
 
 # implement scrollable window
 class ScrollBar(QWidget):
-    def __init__(self, _logic):
+    def __init__(self, _messageHistory):
         super().__init__()
 
-        self.logic = _logic
-        self.logic.msgEvent.onMessagesUpdated.connect(self.updateMessages)
+        self.messageHistory = _messageHistory
+        self.messageHistory.msgEvent.onMessagesUpdated.connect(self.updateMessages)
 
         self.initMe()
 
@@ -45,7 +45,7 @@ class ScrollBar(QWidget):
             if w:
                  w.deleteLater()
 
-        for msg in self.logic.messageHistory:
+        for msg in self.messageHistory.list:
             label = QLabel(msg)
             self.scrollLayout.addWidget(label)
 
@@ -71,7 +71,7 @@ class MessageHistoryWindow(QTabWidget):
         self.setWindowTitle("Message History")
         self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
-        self.scrollBar = ScrollBar(self.mainWindow.logic)
+        self.scrollBar = ScrollBar(self.mainWindow.logic.messageHistory)
         self.addTab(self.scrollBar, "ScrollBar")
 
     def closeEvent(self, event):

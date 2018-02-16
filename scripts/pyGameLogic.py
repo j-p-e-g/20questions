@@ -1,50 +1,51 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 
 import pyGameData
+import pyGameMessageHistory as msgHistory
 from pyGameGlobals import KnowledgeValues
 
 class InputEvent(QObject):
     onGameStart = pyqtSignal()
     onQuestionAnswered = pyqtSignal(int)
     onGuessReaction = pyqtSignal(bool)
-
-class MsgEvent(QObject):
-    onMessagesUpdated = pyqtSignal()
+    onSolutionSent = pyqtSignal(str)
 
 class GuessEvent(QObject):
-    onStartGame = pyqtSignal()
     onGuessSent = pyqtSignal(str)
     onQuestionSent = pyqtSignal(str)
     onRequestSolution = pyqtSignal()
+    onRoundFinished = pyqtSignal()
 
 class GameLogic():
     def __init__(self, _data):
         self.data = _data
         self.properties = {}
-        self.messageHistory = []
+        self.messageHistory = msgHistory.MessageHistory()
 
-        self.msgEvent = MsgEvent()
         self.guessEvent = GuessEvent()
         self.inputEvent = InputEvent()
 
         self.inputEvent.onGameStart.connect(self.startRound)
         self.inputEvent.onQuestionAnswered.connect(self.onReceivedQuestionAnswer)
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
+        self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
 
-        self.initRound(_data)
+        self.initRound()
 
-    def initRound(self, data):
-        self.guesses = []
+    def initRound(self):
+        print("initRound")
         self.previousQuestion = 0
-        self.currentGuess = {}
+        self.guesses = []
 
-        for prop in data.properties[data.propertiesMainAttribute]:
+        for prop in self.data.properties[self.data.propertiesMainAttribute]:
             propEntry = {}
             propEntry["tried"] = False
             propEntry["value"] = KnowledgeValues.UNKNOWN
             self.properties[prop["identifier"]] = propEntry
 
     def startRound(self):
+        print("startRound")
+
         # 1. iterate over all properties for the current guess
         # 2. assign weights to each object
         # 3. if there's a single object matching all properties, guess!
@@ -63,59 +64,59 @@ class GameLogic():
                     entry["tried"] = True
                     return
 
-        guess = self.data.constructGuess("airplane")
-        if guess != "":
-            self.guesses = []
-            self.guessEvent.onGuessSent.emit(guess)
-            return
+        try:
+            objects = self.data.objects[self.data.objectsMainAttribute]
+            for obj in objects:
+                if not "name" in obj:
+                    self.messageHistory.addErrorMessage("Key 'name' not found in data objects")
+                else:
+                    objName = obj["name"]
+                    if not objName in self.guesses:
+                        guess = self.data.constructGuess(objName)
+                        if guess != "":
+                            self.guesses.append(objName)
+                            self.guessEvent.onGuessSent.emit(guess)
+                            return
+        except KeyError:
+            self.messageHistory.addErrorMessage("'" + self.data.objectsMainAttribute + "' not found in data objects")
 
         self.guessEvent.onRequestSolution.emit()
 
     def onReceivedQuestionAnswer(self, _value):
-        print("onReceivedQuestionAnswer: " + str(_value))
         if self.previousQuestion in self.properties:
             entry = self.properties[self.previousQuestion]
             entry["value"] = _value
         else:
             errorMsg = "Identifier '" + str(self.previousQuestion) + "' not found in Logic properties!"
             print(errorMsg)
-            self.addErrorMessage(errorMsg)
+            self.messageHistory.addErrorMessage(errorMsg)
 
         self.nextRun()
 
-    def onReceivedGuessResponse(self, _result):
-        print("onReceivedGuessResponse: " + str(_result))
+    def onReceivedGuessResponse(self, _success):
+        if _success:
+            if len(self.guesses) == 0:
+                errorMsg = "Guess got confirmed but is not stored!"
+                print(errorMsg)
+                self.messageHistory.addErrorMessage(errorMsg)
+                return
 
-        if _result:
-            self.updateData()
-            self.guessEvent.onStartGame.emit()
+            lastGuess = self.guesses[len(self.guesses) - 1]
+            self.updateData(lastGuess)
+            self.initRound()
+            self.guessEvent.onRoundFinished.emit()
         else:
             # keep asking
             self.nextRun()
 
-    # current session messages
-    def clearMessageHistory(self):
-        self.messageHistory.clear()
+    def onReceivedSolution(self, _solution):
+        print("OnReceivedSolution: " + _solution)
+        self.updateData(_solution)
+        self.initRound()
+        self.guessEvent.onRoundFinished.emit()
 
-    def addPlayerMessage(self, _msg):
-        self.addMessage("\"" + _msg + "\"")
-
-    def addProgramMessage(self, _msg):
-        self.addFormattedMessage(_msg, "blue")
-
-    def addDebugMessage(self, _msg):
-        self.addFormattedMessage(_msg, "gray")
-
-    def addErrorMessage(self, _msg):
-        self.addFormattedMessage(_msg, "red")
-
-    def addFormattedMessage(self, _msg, _color):
-        self.addMessage("<font color='" + _color + "'>" + _msg + "</font")
-
-    def addMessage(self, _msg):
-        self.messageHistory.append(_msg)
-        self.msgEvent.onMessagesUpdated.emit()
-
-    def updateData(self):
+    def updateData(self, _solution):
+        # TODO: if solution already in list of object, update properties
+        #       else: add new object and the stored property values
         self.data.saveObjects()
         self.data.saveProperties()

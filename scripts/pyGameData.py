@@ -16,9 +16,7 @@ class GameData():
 
         self.objects = {}
         self.properties = {}
-        self.propertyValues = {}
 
-        self.setupPropertyValues()
         self.initData()
 
     def initData(self):
@@ -35,12 +33,6 @@ class GameData():
         self.readProperties()
         self.printProperties()
         # self.saveProperties()
-
-    def setupPropertyValues(self):
-        self.propertyValues[KnowledgeValues.UNKNOWN] = "unknown"
-        self.propertyValues[KnowledgeValues.YES] = "yes"
-        self.propertyValues[KnowledgeValues.NO] = "no"
-        self.propertyValues[KnowledgeValues.MAYBE] = "it depends"
 
     # read/write object data
     def readObjects(self):
@@ -163,6 +155,30 @@ class GameData():
         with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
 
+    def constructInitialPrompt(self):
+        return "Think of an object (not an abstract concept)"
+
+    def constructInitialPromptButtonText(self):
+        return "Got it!"
+
+    def constructAnswerButtonText(self, _value):
+        if _value == KnowledgeValues.UNKNOWN:
+            return "I don't know"
+        elif _value == KnowledgeValues.YES:
+            return "Yes"
+        elif _value == KnowledgeValues.NO:
+            return "No"
+        elif _value == KnowledgeValues.MAYBE:
+            return "Sometimes/It depends"
+
+        return ""
+
+    def constructGuessResponseButtonText(self, _result):
+        if _result:
+            return "Yes, that's it!"
+        else:
+            return "No"
+
     def constructQuestion(self, _propIdentifier):
         for prop in self.properties[self.propertiesMainAttribute]:
             if prop["identifier"] == _propIdentifier:
@@ -178,3 +194,9 @@ class GameData():
                 return guess
 
         return ""
+
+    def constructSolutionRequest(self):
+        return "I give up! What is it?"
+
+    def constructSolutionButtonText(self):
+        return "Send"
