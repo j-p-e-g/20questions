@@ -47,3 +47,29 @@ class GamePhrasing():
 
     def constructSolutionButtonText(self):
         return "Send"
+
+    # helper methods
+    def isArticle(self, word):
+        return word == "a" or word == "an" or word == "the"
+
+    def isVowel(self, char):
+        return char == 'a' or char == 'e' or char == 'i' or char == 'o'
+
+    def splitStringIntoArticleAndNoun(self, _str):
+        elements = _str.split()
+        article = ""
+        noun = _str
+
+        if len(elements) > 1:
+            if self.isArticle(elements[0]):
+                article = elements[0]
+                noun = " ".join(elements[1:len(elements)])
+
+        if article == "":
+            if self.isVowel(noun[0]):
+                article = "an"
+            else:
+                article = "a"
+
+        print(_str + " split into '" + article + "' and '" + noun + "'")
+        return article, noun

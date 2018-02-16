@@ -23,19 +23,11 @@ class GameData():
         self.initData()
 
     def initData(self):
-        # self.setupFakeObjectsData()
-        # self.saveObjects()
-
-        # self.setupFakePropertiesData()
-        # self.saveProperties()
-
         self.readObjects()
         self.printObjects()
-        # self.saveObjects()
 
         self.readProperties()
         self.printProperties()
-        # self.saveProperties()
 
     # read/write object data
     def readObjects(self):
@@ -45,50 +37,55 @@ class GameData():
         except FileNotFoundError:
             print("ERROR: Trying to open non-existing file " + OBJECTS_DATA_FILE + "!")
 
-    def setupFakeObjectsData(self):
-        self.objects[self.objectsMainAttribute] = []
+    def addOrUpdateObject(self, _name, _allProperties):
+        if self.objectsMainAttribute in self.objects:
+            for obj in self.objects[self.objectsMainAttribute]:
+                if obj["name"] == _name:
+                    # the object already exists -> update properties
 
+                    _objProperties = []
+
+                    # replace existing property values
+                    for prop in obj["properties"]:
+                        identifier = prop["identifier"]
+                        if identifier in _allProperties:
+                            _objProperties.append(identifier)
+                            value = _allProperties[identifier]["value"]
+                            if value != prop["value"]:
+                                if value == KnowledgeValues.YES or value == KnowledgeValues.NO:
+                                    prop["value"] = value
+
+                    # add new properties
+                    for propId in _allProperties:
+                        if propId not in _objProperties:
+                            value = _allProperties[propId]["value"]
+                            if value == KnowledgeValues.YES or value == KnowledgeValues.NO:
+                                obj["properties"].append({
+                                    "identifier": propId,
+                                    "value": value
+                                })
+
+                    return
+
+        # not already in the dictionary, so it's a new object
+        # TODO: validate _name (?)
         properties = []
-        properties.append({
-            "identifier": 12563,
-            "value": 1
-        })
-        properties.append({
-            "identifier": 7269,
-            "value": 2
-        })
+        for prop in _allProperties:
+            tempPropEntry = _allProperties[prop]
+            if not tempPropEntry["tried"]:
+                continue
 
-        self.objects[self.objectsMainAttribute].append({
-            "name": "airplane",
-            "article": "an",
-            "properties": properties
-        })
+            if tempPropEntry["value"] != KnowledgeValues.UNKNOWN:
+                propEntry = {}
+                propEntry["identifier"] = prop
+                propEntry["value"] = tempPropEntry["value"]
+                properties.append(propEntry)
 
-        properties = []
-        properties.append({
-            "identifier": 7269,
-            "value": 1
-        })
+        newObject = {}
+        newObject["article"], newObject["name"] = self.phrasing.splitStringIntoArticleAndNoun(_name)
+        newObject["properties"] = properties
 
-        self.objects[self.objectsMainAttribute].append({
-            "name": "banana",
-            "article": "a",
-            "properties": properties
-        })
-
-        properties = []
-        properties.append({
-            "identifier": 12563,
-            "value": 0
-        })
-
-        self.objects[self.objectsMainAttribute].append({
-            "name": "moon",
-            "article": "the",
-            "properties": properties
-        })
-
-        self.printObjects()
+        self.objects[self.objectsMainAttribute].append(newObject)
 
     def printObjects(self):
         if self.objectsMainAttribute in self.objects:
@@ -119,22 +116,6 @@ class GameData():
                 self.properties = json.load(infile)
         except FileNotFoundError:
             print("ERROR: Trying to open non-existing file " + PROPERTIES_DATA_FILE + "!")
-
-    def setupFakePropertiesData(self):
-        self.properties[self.propertiesMainAttribute] = []
-
-        self.properties[self.propertiesMainAttribute].append({
-            "identifier": 12563,
-            "modal_verb": "can",
-            "suffix": "fly"
-        })
-        self.properties[self.propertiesMainAttribute].append({
-            "identifier": 7269,
-            "modal_verb": "is",
-            "suffix": "a type of fruit"
-        })
-
-        self.printProperties()
 
     def printProperties(self):
         if self.propertiesMainAttribute in self.properties:

@@ -140,5 +140,6 @@ class GameLogic():
         # TODO: if solution already in list of objects, update properties
         #       else: add new object and the stored property values
 
+        self.data.addOrUpdateObject(_solution, self.properties)
         self.data.saveObjects()
         self.data.saveProperties()
