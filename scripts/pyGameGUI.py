@@ -1,8 +1,37 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from pyGameGlobals import *
 import pyGameDebugGUI as debugGUI
 import pyGameMessageHistoryGUI as msgGUI
+from enum import Enum
+
+class GameState(Enum):
+    START = 0
+    QUESTION = 1
+    GUESS = 2
+    SOLUTION = 3
+    DISTINCTION = 4
+
+class BoxWidget(QWidget):
+    def __init__(self, _widgets):
+        super().__init__()
+
+        vLayout = QVBoxLayout()
+        vLayout.addStretch(1)
+
+        for widget in _widgets:
+            vLayout.addWidget(widget)
+
+        vLayout.addStretch(1)
+
+        hLayout = QHBoxLayout()
+        hLayout.addStretch(1)
+        hLayout.addLayout(vLayout)
+        hLayout.addStretch(1)
+
+        self.setLayout(hLayout)
+
 
 # application main window
 class MainWindow(QMainWindow):
@@ -12,13 +41,13 @@ class MainWindow(QMainWindow):
         self.msgWindowVisible = False
         self.debugWindowVisible = False
         self.data = _data
+        self.state = GameState.START
 
-        self.initMe()
-        self.show()
+        self.initWindow()
+        self.displayState()
 
-    def initMe(self):
+    def initWindow(self):
         global PROGRAM_ICON_PATH
-        global TICK_ICON_PATH
 
         # pos(x, y), size(width, height)
         self.setGeometry(400, 200, 500, 400)
@@ -27,13 +56,21 @@ class MainWindow(QMainWindow):
 
         self.statusBar().showMessage("Status bar")
 
+        self.setupMenu()
+
+    def closeEvent(self, event):
+        # close the entire application even if other windows are still open
+        exit()
+
+    def setupMenu(self):
+        global TICK_ICON_PATH
+
         # set up exit action
         self.msgAction = QAction(QIcon(TICK_ICON_PATH), "&Show History", self)
         self.msgAction.setIconVisibleInMenu(False)
         self.msgAction.setShortcut("Ctrl+M")
         self.msgAction.setStatusTip("Show message history")
         self.msgAction.triggered.connect(self.onToggleMessageHistory)
-
         self.debugAction = QAction(QIcon(TICK_ICON_PATH), "&Show Debug", self)
         self.debugAction.setIconVisibleInMenu(False)
         self.debugAction.setShortcut("Ctrl+D")
@@ -46,8 +83,140 @@ class MainWindow(QMainWindow):
         file.addAction(self.msgAction)
         file.addAction(self.debugAction)
 
-    def closeEvent(self, event):
-        exit()
+    def displayState(self):
+        if self.state == GameState.START:
+            self.displayStartState()
+        elif self.state == GameState.QUESTION:
+            self.displayQuestionState()
+        elif self.state == GameState.GUESS:
+            self.displayGuessState()
+        elif self.state == GameState.SOLUTION:
+            self.displaySolutionState()
+        elif self.state == GameState.DISTINCTION:
+            self.displayDistinctionState()
+
+        self.show()
+
+    def displayStartState(self):
+        print("start state")
+
+        label = QLabel("Think of an object", self)
+        label.setFont(QFont("Arial", 14))
+        label.setStyleSheet("QLabel { color : blue; }");
+
+        button = QPushButton("Got it!", self)
+        button.setFont(QFont("Arial", 12))
+        button.clicked.connect(self.onStart)
+
+        widget = BoxWidget([label, button])
+        self.setCentralWidget(widget)
+
+    def displayQuestionState(self):
+        print("question state")
+
+        # TODO: get identifier from data
+        identifier = 25368
+        modalVerb = "is"
+        suffix = "an animal"
+
+        question = modalVerb.capitalize() + " it " + suffix + "?"
+        label = QLabel(question, self)
+        label.setFont(QFont("Arial", 14))
+        label.setStyleSheet("QLabel { color : blue; }");
+
+        buttonYes = QPushButton("Yes", self)
+        buttonYes.setFont(QFont("Arial", 12))
+        buttonYes.clicked.connect(self.onAnswerQuestion)
+
+        buttonNo = QPushButton("No", self)
+        buttonNo.setFont(QFont("Arial", 12))
+        buttonNo.clicked.connect(self.onAnswerQuestion)
+
+        buttonMaybe = QPushButton("Maybe", self)
+        buttonMaybe.setFont(QFont("Arial", 12))
+        buttonMaybe.clicked.connect(self.onAnswerQuestion)
+
+        buttonUnknown = QPushButton("I don't know", self)
+        buttonUnknown.setFont(QFont("Arial", 12))
+        buttonUnknown.clicked.connect(self.onAnswerQuestion)
+
+        widget = BoxWidget([label, buttonYes, buttonNo, buttonMaybe, buttonUnknown])
+        self.setCentralWidget(widget)
+
+    def displayGuessState(self):
+        print("guess state")
+
+        # TODO: get guess from data
+        article = "a"
+        noun = "banana"
+
+        guess = "I think it's " + article + " " + noun
+        label = QLabel(guess, self)
+        label.setFont(QFont("Arial", 14))
+        label.setStyleSheet("QLabel { color : blue; }");
+
+        buttonYes = QPushButton("Correct", self)
+        buttonYes.setFont(QFont("Arial", 12))
+        buttonYes.clicked.connect(self.onAnswerGuess)
+
+        buttonNo = QPushButton("Wrong", self)
+        buttonNo.setFont(QFont("Arial", 12))
+        buttonNo.clicked.connect(self.onAnswerGuess)
+
+        widget = BoxWidget([label, buttonYes, buttonNo])
+        self.setCentralWidget(widget)
+
+    def displaySolutionState(self):
+        print("solution state")
+
+        query = "I give up! What is it?"
+        label = QLabel(query, self)
+        label.setFont(QFont("Arial", 14))
+        label.setStyleSheet("QLabel { color : blue; }");
+
+        self.solution = QLineEdit(self)
+        noNumRegex = QRegExp("[a-zA-Z\s-]+")
+        self.solution.setValidator(QRegExpValidator(noNumRegex, self.solution))
+
+        button = QPushButton("Send", self)
+        button.setFont(QFont("Arial", 12))
+        button.clicked.connect(self.onSolution)
+
+        widget = BoxWidget([label, self.solution, button])
+        self.setCentralWidget(widget)
+
+    def displayDistinctionState(self):
+        print("distinction state")
+        # TODO: allow specifying new properties to distinguish between objects
+        self.changeState(GameState.START)
+
+    def changeState(self, newState):
+        self.state = newState
+        self.displayState()
+
+    def onStart(self):
+        self.changeState(GameState.QUESTION)
+
+    def onAnswerQuestion(self):
+        # TODO: pass answer to data
+        # TODO: actually keep asking question until we either run out of questions or identify the object
+        self.changeState(GameState.GUESS)
+
+    def onAnswerGuess(self):
+        if self.sender().text() == "Wrong":
+            # TODO: actually this is only needed if we have no further guesses
+            self.changeState(GameState.SOLUTION)
+        else:
+            # TODO: pass result to data and save
+            self.changeState(GameState.START)
+
+        self.displayState()
+
+    def onSolution(self):
+        if len(self.solution.text()) > 0:
+            self.changeState(GameState.DISTINCTION)
+        else:
+            print("Type the name of your object")
 
     def onToggleMessageHistory(self):
         if self.msgWindowVisible:
