@@ -1,38 +1,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 from pyGameGlobals import *
 import pyGameDebugGUI as debugGUI
 import pyGameMessageHistoryGUI as msgGUI
-from enum import Enum
-
-class GameState(Enum):
-    START = 0
-    QUESTION = 1
-    GUESS = 2
-    SOLUTION = 3
-    DISTINCTION = 4
-
-class BoxWidget(QWidget):
-    def __init__(self, _widgets):
-        super().__init__()
-
-        vLayout = QVBoxLayout()
-        vLayout.setSpacing(5)
-        vLayout.addStretch(1)
-
-        for widget in _widgets:
-            vLayout.addWidget(widget)
-
-        vLayout.addStretch(1)
-
-        hLayout = QHBoxLayout()
-        hLayout.setSpacing(5)
-        hLayout.addStretch(1)
-        hLayout.addLayout(vLayout)
-        hLayout.addStretch(1)
-
-        self.setLayout(hLayout)
+import StateGUI.pyGameStartStateGUI as startState
+import StateGUI.pyGameQuestionStateGUI as questionState
+import StateGUI.pyGameGuessStateGUI as guessState
+import StateGUI.pyGameSolutionStateGUI as solutionState
 
 
 # application main window
@@ -42,19 +16,17 @@ class MainWindow(QMainWindow):
 
         self.msgWindowVisible = False
         self.debugWindowVisible = False
+
         self.logic = _logic
         self.logic.guessEvent.onGuessSent.connect(self.onReceivedGuess)
         self.logic.guessEvent.onQuestionSent.connect(self.onReceivedQuestion)
         self.logic.guessEvent.onRequestSolution.connect(self.onSolutionRequested)
         self.logic.guessEvent.onRoundFinished.connect(self.onRoundFinished)
 
-        self.data = self.logic.data
-        self.phrasing = self.data.phrasing
-
-        self.messageHistory = self.logic.messageHistory
-
         self.initWindow()
-        self.displayStartState()
+
+        self.setCentralWidget(startState.StartStateWidget(self.logic))
+        self.show()
 
     def initWindow(self):
         global PROGRAM_ICON_PATH
@@ -63,25 +35,25 @@ class MainWindow(QMainWindow):
         self.setGeometry(400, 200, 500, 400)
         self.setWindowTitle("Main Window")
         self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
-
-        self.statusBar().showMessage("Status bar")
+#        self.statusBar().showMessage("Status bar")
 
         self.setupMenu()
 
-    def onReceivedGuess(self, _guess):
-        self.displayGuessState(_guess)
+    def onReceivedQuestion(self, _question):
+        self.setCentralWidget(questionState.QuestionStateWidget(self.logic, _question))
         self.show()
 
-    def onReceivedQuestion(self, _question):
-        self.displayQuestionState(_question)
+    def onReceivedGuess(self, _guess):
+        self.setCentralWidget(guessState.GuessStateWidget(self, self.logic, _guess))
         self.show()
 
     def onSolutionRequested(self):
-        self.displaySolutionState()
+        self.setCentralWidget(solutionState.SolutionStateWidget(self.logic))
         self.show()
 
     def onRoundFinished(self):
-        self.displayStartState()
+        self.setCentralWidget(startState.StartStateWidget(self.logic))
+        self.show()
 
     def closeEvent(self, event):
         # close the entire application even if other windows are still open
@@ -96,6 +68,7 @@ class MainWindow(QMainWindow):
         self.msgAction.setShortcut("Ctrl+M")
         self.msgAction.setStatusTip("Show message history")
         self.msgAction.triggered.connect(self.onToggleMessageHistory)
+
         self.debugAction = QAction(QIcon(TICK_ICON_PATH), "&Show Debug", self)
         self.debugAction.setIconVisibleInMenu(False)
         self.debugAction.setShortcut("Ctrl+D")
@@ -107,137 +80,6 @@ class MainWindow(QMainWindow):
         file = menubar.addMenu("&View")
         file.addAction(self.msgAction)
         file.addAction(self.debugAction)
-
-    def displayStartState(self):
-        self.messageHistory.addFormattedMessage("New round", "green")
-
-        msg = self.phrasing.constructInitialPrompt()
-        self.messageHistory.addProgramMessage(msg)
-
-        label = QLabel(msg, self)
-        label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("QLabel { color : blue; }");
-
-        buttonText = self.phrasing.constructInitialPromptButtonText()
-        button = QPushButton(buttonText, self)
-        button.setFont(QFont("Arial", 12))
-        button.clicked.connect(self.onStart)
-
-        widget = BoxWidget([label, button])
-        self.setCentralWidget(widget)
-        self.show()
-
-    def displayQuestionState(self, _question):
-        self.messageHistory.addProgramMessage(_question)
-
-        label = QLabel(_question, self)
-        label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("QLabel { color : blue; }");
-
-        buttonYesText = self.phrasing.constructAnswerButtonText(KnowledgeValues.YES)
-        buttonNoText = self.phrasing.constructAnswerButtonText(KnowledgeValues.NO)
-        buttonMaybeText = self.phrasing.constructAnswerButtonText(KnowledgeValues.MAYBE)
-        buttonUnknownText = self.phrasing.constructAnswerButtonText(KnowledgeValues.UNKNOWN)
-        maxTextWidth = 10*max(len(buttonYesText), len(buttonNoText), len(buttonMaybeText), len(buttonUnknownText))
-
-        buttonYes = QPushButton(buttonYesText, self)
-        buttonYes.setFont(QFont("Arial", 12))
-        buttonYes.clicked.connect(self.onAnswerQuestion)
-        buttonYes.setMinimumWidth(maxTextWidth)
-
-        buttonNo = QPushButton(buttonNoText, self)
-        buttonNo.setFont(QFont("Arial", 12))
-        buttonNo.clicked.connect(self.onAnswerQuestion)
-        buttonNo.setMinimumWidth(maxTextWidth)
-
-        buttonMaybe = QPushButton(buttonMaybeText, self)
-        buttonMaybe.setFont(QFont("Arial", 12))
-        buttonMaybe.clicked.connect(self.onAnswerQuestion)
-        buttonMaybe.setMinimumWidth(maxTextWidth)
-
-        buttonUnknown = QPushButton(buttonUnknownText, self)
-        buttonUnknown.setFont(QFont("Arial", 12))
-        buttonUnknown.clicked.connect(self.onAnswerQuestion)
-        buttonUnknown.setMinimumWidth(maxTextWidth)
-
-        widget = BoxWidget([label, buttonYes, buttonNo, buttonMaybe, buttonUnknown])
-        self.setCentralWidget(widget)
-        self.show()
-
-    def displayGuessState(self, _guess):
-        self.messageHistory.addProgramMessage(_guess)
-
-        label = QLabel(_guess, self)
-        label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("QLabel { color : blue; }");
-
-        buttonYesText = self.phrasing.constructGuessResponseButtonText(True)
-        buttonYes = QPushButton(buttonYesText, self)
-        buttonYes.setFont(QFont("Arial", 12))
-        buttonYes.clicked.connect(self.onAnswerGuessTrue)
-
-        buttonNoText = self.phrasing.constructGuessResponseButtonText(False)
-        buttonNo = QPushButton(buttonNoText, self)
-        buttonNo.setFont(QFont("Arial", 12))
-        buttonNo.clicked.connect(self.onAnswerGuessFalse)
-
-        widget = BoxWidget([label, buttonYes, buttonNo])
-        self.setCentralWidget(widget)
-        self.show()
-
-    def displaySolutionState(self):
-        query = self.phrasing.constructSolutionRequest()
-        self.messageHistory.addProgramMessage(query)
-
-        label = QLabel(query, self)
-        label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("QLabel { color : blue; }");
-
-        self.solutionTextBox = QLineEdit(self)
-        noNumRegex = QRegExp("[a-zA-Z\s-]+")
-        self.solutionTextBox.setValidator(QRegExpValidator(noNumRegex, self.solutionTextBox))
-
-        buttonText = self.phrasing.constructSolutionButtonText()
-        button = QPushButton(buttonText, self)
-        button.setFont(QFont("Arial", 12))
-        button.clicked.connect(self.onSolutionSent)
-
-        widget = BoxWidget([label, self.solutionTextBox, button])
-        self.setCentralWidget(widget)
-        self.show()
-
-    def displayDistinctionState(self):
-        print("distinction state")
-        # TODO: allow specifying new properties to distinguish between objects
-        self.displayStartState()
-
-    def onStart(self):
-        self.messageHistory.addPlayerMessage(self.sender().text())
-        self.logic.inputEvent.onGameStart.emit()
-
-    def onAnswerQuestion(self):
-        buttonText = self.sender().text()
-        self.messageHistory.addPlayerMessage(buttonText)
-        self.logic.inputEvent.onQuestionAnswered.emit(buttonText)
-
-    def onAnswerGuessTrue(self):
-        self.messageHistory.addPlayerMessage(self.sender().text())
-        self.logic.inputEvent.onGuessReaction.emit(True)
-        self.displayStartState()
-
-    def onAnswerGuessFalse(self):
-        self.messageHistory.addPlayerMessage(self.sender().text())
-        self.logic.inputEvent.onGuessReaction.emit(False)
-
-    def onSolutionSent(self):
-        solution = self.solutionTextBox.text()
-        if len(solution) > 0:
-            self.messageHistory.addPlayerMessage(solution)
-            self.logic.inputEvent.onSolutionSent.emit(solution)
-        else:
-            msg = "Type the name of your object"
-            self.messageHistory.addProgramMessage(msg)
-            print(msg)
 
     def onToggleMessageHistory(self):
         if self.msgWindowVisible:
