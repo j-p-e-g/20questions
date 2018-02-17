@@ -21,10 +21,10 @@ class QuestionStateWidget(QWidget):
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
 
-        buttonYesText = self.phrasing.constructAnswerButtonText(KnowledgeValues.YES)
-        buttonNoText = self.phrasing.constructAnswerButtonText(KnowledgeValues.NO)
-        buttonMaybeText = self.phrasing.constructAnswerButtonText(KnowledgeValues.MAYBE)
-        buttonUnknownText = self.phrasing.constructAnswerButtonText(KnowledgeValues.UNKNOWN)
+        buttonYesText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        buttonNoText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+        buttonMaybeText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.MAYBE)
+        buttonUnknownText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.UNKNOWN)
         maxTextWidth = 10*max(len(buttonYesText), len(buttonNoText), len(buttonMaybeText), len(buttonUnknownText))
 
         buttonYes = QPushButton(buttonYesText, self)

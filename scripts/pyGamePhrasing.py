@@ -15,7 +15,7 @@ class GamePhrasing():
     def constructInitialPromptButtonText(self):
         return "Got it!"
 
-    def constructAnswerButtonText(self, _value):
+    def getTextForKnowledgeValue(self, _value):
         if _value in self.knowledgeValues:
             return self.knowledgeValues[_value]
 

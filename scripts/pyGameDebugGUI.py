@@ -49,11 +49,65 @@ class DebugPropertyTab(scrollBar.ScrollBar):
         elif value == KnowledgeValues.NO:
             color = "red"
 
-        answerText = self.phrasing.constructAnswerButtonText(_data["value"])
+        answerText = self.phrasing.getTextForKnowledgeValue(_data["value"])
         answer = "<font color=\"" + color + "\">" + answerText + "</font>"
 
         line = question + " : " + answer
         return line
+
+
+class DebugObjectTab(scrollBar.ScrollBar):
+    def __init__(self, _logic, _scrollToBottom):
+        super().__init__(_scrollToBottom)
+
+        self.logic = _logic
+        self.data = self.logic.data
+        self.phrasing = self.data.phrasing
+
+        self.logic.debugEvent.onObjectsUpdated.connect(self.displayObjects)
+        self.logic.debugEvent.onPropertiesUpdated.connect(self.displayObjects)
+
+        self.displayObjects()
+
+    def displayObjects(self):
+        display = []
+
+        yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+
+        # TODO: sort objects by probability
+        for objName in self.logic.objects:
+            display.append("<h3>" + objName + "</h3>")
+            objEntry = self.logic.objects[objName]
+            objProperties = objEntry["properties"]
+
+            for prop in objProperties[yesValueText]:
+                propEntry = self.logic.properties[prop]
+
+                color = "black"
+                value = propEntry["value"]
+                if value == KnowledgeValues.YES:
+                    color = "green"
+                elif value == KnowledgeValues.NO:
+                    color = "red"
+
+                desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + yesValueText + "</font>"
+                display.append(desc)
+
+            for prop in objProperties[noValueText]:
+                propEntry = self.logic.properties[prop]
+
+                color = "black"
+                value = propEntry["value"]
+                if value == KnowledgeValues.NO:
+                    color = "green"
+                elif value == KnowledgeValues.YES:
+                    color = "red"
+
+                desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + noValueText + "</font>"
+                display.append(desc)
+
+        self.update(display)
 
 
 # window capable of showing debug information
@@ -74,7 +128,7 @@ class DebugWindow(QTabWidget):
         self.setWindowTitle("Debug window")
         self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
-        tabObj = QWidget()
+        tabObj = DebugObjectTab(_logic, False)
         tabProp = DebugPropertyTab(_logic, False)
         self.addTab(tabObj, "Objects")
         self.addTab(tabProp, "Properties")

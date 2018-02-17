@@ -27,6 +27,7 @@ class GameLogic():
     def __init__(self, _data):
         self.data = _data
         self.properties = {}
+        self.objects = {}
         self.messageHistory = msgHistory.MessageHistory()
 
         self.guessEvent = GuessEvent()
@@ -44,11 +45,77 @@ class GameLogic():
         self.previousQuestion = 0
         self.guesses = []
 
+        self.initProperties()
+        self.initObjects()
+
+    def initProperties(self):
+        self.properties = {}
+
+        yesValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        noValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+
         for prop in self.data.properties[self.data.propertiesMainAttribute]:
             propEntry = {}
             propEntry["tried"] = False
             propEntry["value"] = KnowledgeValues.UNKNOWN
+
+            propEntry["desc"] = prop["modal_verb"] + " " + prop["suffix"]
+
+            # setup empty, will be filled in initObjects
+            propEntry["objects"] = {}
+            propEntry["objects"][yesValueText] = []
+            propEntry["objects"][noValueText] = []
+
             self.properties[prop["identifier"]] = propEntry
+
+    def initObjects(self):
+        self.objects = {}
+
+        yesValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        noValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+        maybeValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.MAYBE)
+
+        for obj in self.data.objects[self.data.objectsMainAttribute]:
+
+            name = obj["name"]
+            if name in self.objects:
+                print("Warning: " + name + " already defined in objects!")
+                continue
+
+            yesProperties = []
+            noProperties = []
+            maybeProperties = []
+
+            for prop in obj["properties"]:
+                identifier = prop["identifier"]
+                value = prop["value"]
+
+                if not identifier in self.properties:
+                    print("Warning: Property '" + str(identifier) + "' not defined in properties!")
+                    continue
+
+                if value == KnowledgeValues.UNKNOWN:
+                    continue
+
+                propEntry = self.properties[identifier]
+
+                if value == KnowledgeValues.YES:
+                    yesProperties.append(identifier)
+                    propEntry["objects"][yesValueText].append(name)
+                elif value == KnowledgeValues.NO:
+                    noProperties.append(identifier)
+                    propEntry["objects"][noValueText].append(name)
+                elif value == KnowledgeValues.MAYBE:
+                    maybeProperties.append(identifier)
+
+            objEntry = {}
+            objEntry["properties"] = {}
+
+            objEntry["properties"][yesValueText] = yesProperties
+            objEntry["properties"][noValueText] = noProperties
+            objEntry["properties"][maybeValueText] = maybeProperties
+
+            self.objects[name] = objEntry
 
     def startRound(self):
         self.nextRun()
