@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
             self.debugWindow.close()
             self.onDebugWindowClosed()
         else:
-            self.debugWindow = debugGUI.DebugWindow(self)
+            self.debugWindow = debugGUI.DebugWindow(self, self.logic)
             self.debugAction.setIconVisibleInMenu(True)
             self.debugWindowVisible = True
 

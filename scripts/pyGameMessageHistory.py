@@ -1,7 +1,9 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 
+
 class MsgEvent(QObject):
     onMessagesUpdated = pyqtSignal()
+
 
 class MessageHistory():
     def __init__(self):

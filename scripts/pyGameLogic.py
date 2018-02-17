@@ -1,8 +1,8 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 
-import pyGameData
 import pyGameMessageHistory as msgHistory
 from pyGameGlobals import KnowledgeValues
+
 
 class InputEvent(QObject):
     onGameStart = pyqtSignal()
@@ -10,11 +10,18 @@ class InputEvent(QObject):
     onGuessReaction = pyqtSignal(bool)
     onSolutionSent = pyqtSignal(str)
 
+
 class GuessEvent(QObject):
     onGuessSent = pyqtSignal(str)
     onQuestionSent = pyqtSignal(str)
     onRequestSolution = pyqtSignal()
     onRoundFinished = pyqtSignal()
+
+
+class DebugEvent(QObject):
+    onPropertiesUpdated = pyqtSignal()
+    onObjectsUpdated = pyqtSignal()
+
 
 class GameLogic():
     def __init__(self, _data):
@@ -24,6 +31,7 @@ class GameLogic():
 
         self.guessEvent = GuessEvent()
         self.inputEvent = InputEvent()
+        self.debugEvent = DebugEvent()
 
         self.inputEvent.onGameStart.connect(self.startRound)
         self.inputEvent.onQuestionAnswered.connect(self.onReceivedQuestionAnswer)
@@ -74,6 +82,7 @@ class GameLogic():
                 self.previousQuestion = identifier
                 self.guessEvent.onQuestionSent.emit(question)
                 entry["tried"] = True
+                self.debugEvent.onPropertiesUpdated.emit()
                 return True
 
         return False
@@ -93,6 +102,7 @@ class GameLogic():
                     if guess != "":
                         self.guesses.append(objName)
                         self.guessEvent.onGuessSent.emit(guess)
+                        self.debugEvent.onObjectsUpdated.emit()
                         return True
 
         except KeyError:
@@ -107,6 +117,7 @@ class GameLogic():
         if self.previousQuestion in self.properties:
             entry = self.properties[self.previousQuestion]
             entry["value"] = value
+            self.debugEvent.onPropertiesUpdated.emit()
         else:
             errorMsg = "Identifier '" + str(self.previousQuestion) + "' not found in Logic properties!"
             print(errorMsg)

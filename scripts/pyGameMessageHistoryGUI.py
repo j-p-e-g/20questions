@@ -2,54 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from pyGameGlobals import *
-
-# implement scrollable window
-class ScrollBar(QWidget):
-    def __init__(self, _messageHistory):
-        super().__init__()
-
-        self.messageHistory = _messageHistory
-        self.messageHistory.msgEvent.onMessagesUpdated.connect(self.updateMessages)
-
-        self.initMe()
-
-        self.updateMessages()
-
-    def initMe(self):
-        box = QVBoxLayout(self)
-        self.setLayout(box)
-
-        self.scrollArea = QScrollArea(self)
-        box.addWidget(self.scrollArea)
-        self.scrollArea.setWidgetResizable(True)
-
-        # after each update, scroll to the bottom of the list
-        scrollBar = self.scrollArea.verticalScrollBar()
-        scrollBar.rangeChanged.connect(lambda: scrollBar.setValue(scrollBar.maximum()))
-
-        self.scrollContent = QWidget(self.scrollArea)
-        self.scrollArea.setWidget(self.scrollContent)
-
-        self.scrollLayout = QVBoxLayout(self.scrollContent)
-        self.scrollLayout.setAlignment(Qt.AlignTop)
-        self.scrollContent.setLayout(self.scrollLayout)
-
-    def updateMessages(self):
-        # clear layout
-        while self.scrollLayout.count() > 0:
-            item = self.scrollLayout.takeAt(0)
-            if not item:
-                continue
-
-            w = item.widget()
-            if w:
-                 w.deleteLater()
-
-        for msg in self.messageHistory.list:
-            label = QLabel(msg)
-            self.scrollLayout.addWidget(label)
-
-        self.show()
+import pyGameScrollBarGUI as scrollBar
 
 
 # scrollable window capable of showing the message history
@@ -59,8 +12,11 @@ class MessageHistoryWindow(QTabWidget):
 
         self.mainWindow = _mainWindow
 
+        self.messageHistory = self.mainWindow.logic.messageHistory
+        self.messageHistory.msgEvent.onMessagesUpdated.connect(self.updateMessages)
+
         self.initMe()
-        self.scrollBar.updateMessages()
+        self.updateMessages()
         self.show()
 
     def initMe(self):
@@ -71,8 +27,11 @@ class MessageHistoryWindow(QTabWidget):
         self.setWindowTitle("Message History")
         self.setWindowIcon(QIcon(PROGRAM_ICON_PATH))
 
-        self.scrollBar = ScrollBar(self.mainWindow.logic.messageHistory)
-        self.addTab(self.scrollBar, "ScrollBar")
+        self.scrollBar = scrollBar.ScrollBar(True)
+        self.addTab(self.scrollBar, "Messages")
+
+    def updateMessages(self):
+        self.scrollBar.update(self.messageHistory.list)
 
     def closeEvent(self, event):
         self.mainWindow.onMsgWindowClosed()
