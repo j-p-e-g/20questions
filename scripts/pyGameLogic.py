@@ -26,6 +26,8 @@ class DebugEvent(QObject):
 class GameLogic():
     def __init__(self, _data):
         self.data = _data
+        self.phrasing = self.data.phrasing
+
         self.properties = {}
         self.objects = {}
         self.messageHistory = msgHistory.MessageHistory()
@@ -39,20 +41,22 @@ class GameLogic():
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
         self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
 
+        self.yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        self.noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+        self.maybeValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.MAYBE)
+
         self.initRound()
 
     def initRound(self):
         self.previousQuestion = 0
         self.guesses = []
+        self.objectCandidates = []
 
         self.initProperties()
         self.initObjects()
 
     def initProperties(self):
         self.properties = {}
-
-        yesValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
-        noValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
 
         for prop in self.data.properties[self.data.propertiesMainAttribute]:
             propEntry = {}
@@ -63,17 +67,13 @@ class GameLogic():
 
             # setup empty, will be filled in initObjects
             propEntry["objects"] = {}
-            propEntry["objects"][yesValueText] = []
-            propEntry["objects"][noValueText] = []
+            propEntry["objects"][self.yesValueText] = []
+            propEntry["objects"][self.noValueText] = []
 
             self.properties[prop["identifier"]] = propEntry
 
     def initObjects(self):
         self.objects = {}
-
-        yesValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
-        noValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
-        maybeValueText = self.data.phrasing.getTextForKnowledgeValue(KnowledgeValues.MAYBE)
 
         for obj in self.data.objects[self.data.objectsMainAttribute]:
 
@@ -81,6 +81,8 @@ class GameLogic():
             if name in self.objects:
                 print("Warning: " + name + " already defined in objects!")
                 continue
+
+            self.objectCandidates.append(name)
 
             yesProperties = []
             noProperties = []
@@ -101,19 +103,19 @@ class GameLogic():
 
                 if value == KnowledgeValues.YES:
                     yesProperties.append(identifier)
-                    propEntry["objects"][yesValueText].append(name)
+                    propEntry["objects"][self.yesValueText].append(name)
                 elif value == KnowledgeValues.NO:
                     noProperties.append(identifier)
-                    propEntry["objects"][noValueText].append(name)
+                    propEntry["objects"][self.noValueText].append(name)
                 elif value == KnowledgeValues.MAYBE:
                     maybeProperties.append(identifier)
 
             objEntry = {}
             objEntry["properties"] = {}
 
-            objEntry["properties"][yesValueText] = yesProperties
-            objEntry["properties"][noValueText] = noProperties
-            objEntry["properties"][maybeValueText] = maybeProperties
+            objEntry["properties"][self.yesValueText] = yesProperties
+            objEntry["properties"][self.noValueText] = noProperties
+            objEntry["properties"][self.maybeValueText] = maybeProperties
 
             self.objects[name] = objEntry
 
@@ -121,6 +123,15 @@ class GameLogic():
         self.nextRun()
 
     def nextRun(self):
+
+        if len(self.objectCandidates) == 1:
+            guess = self.data.constructGuess(self.objectCandidates[0])
+            if guess != "":
+                self.guesses.append(self.objectCandidates[0])
+                self.guessEvent.onGuessSent.emit(guess)
+                self.debugEvent.onObjectsUpdated.emit()
+                return
+
         # 1. iterate over all properties for the current guess
         # 2. assign weights to each object
         # 3. if there's a single object matching all properties, guess!
@@ -155,25 +166,16 @@ class GameLogic():
         return False
 
     def tryFindGoodGuess(self):
-        try:
-            objects = self.data.objects[self.data.objectsMainAttribute]
-            for obj in objects:
-                if not "name" in obj:
-                    self.messageHistory.addErrorMessage("Key 'name' not found in data objects")
-                else:
-                    objName = obj["name"]
-                    if objName in self.guesses:
-                        continue
+        for objName in self.objectCandidates:
+            if objName in self.guesses:
+                continue
 
-                    guess = self.data.constructGuess(objName)
-                    if guess != "":
-                        self.guesses.append(objName)
-                        self.guessEvent.onGuessSent.emit(guess)
-                        self.debugEvent.onObjectsUpdated.emit()
-                        return True
-
-        except KeyError:
-            self.messageHistory.addErrorMessage("'" + self.data.objectsMainAttribute + "' not found in data objects")
+            guess = self.data.constructGuess(objName)
+            if guess != "":
+                self.guesses.append(objName)
+                self.guessEvent.onGuessSent.emit(guess)
+                self.debugEvent.onObjectsUpdated.emit()
+                return True
 
         return False
 
@@ -184,6 +186,18 @@ class GameLogic():
         if self.previousQuestion in self.properties:
             entry = self.properties[self.previousQuestion]
             entry["value"] = value
+
+            # If the player answered yes or no, remove all objects with the opposite value
+            # from the list of candidates.
+            if value == KnowledgeValues.YES:
+                for objName in entry["objects"][self.noValueText]:
+                    if objName in self.objectCandidates:
+                        self.objectCandidates.remove(objName)
+            elif value == KnowledgeValues.NO:
+                for objName in entry["objects"][self.yesValueText]:
+                    if objName in self.objectCandidates:
+                        self.objectCandidates.remove(objName)
+
             self.debugEvent.onPropertiesUpdated.emit()
         else:
             errorMsg = "Identifier '" + str(self.previousQuestion) + "' not found in Logic properties!"
@@ -193,6 +207,8 @@ class GameLogic():
         self.nextRun()
 
     def onReceivedGuessResponse(self, _success):
+        prevGuess = self.guesses[len(self.guesses) - 1]
+
         if _success:
             if len(self.guesses) == 0:
                 errorMsg = "Guess got confirmed but is not stored!"
@@ -200,24 +216,22 @@ class GameLogic():
                 self.messageHistory.addErrorMessage(errorMsg)
                 return
 
-            lastGuess = self.guesses[len(self.guesses) - 1]
-            self.updateData(lastGuess)
+            self.updateData(prevGuess)
             self.initRound()
             self.guessEvent.onRoundFinished.emit()
         else:
             # keep asking
+            if prevGuess in self.objectCandidates:
+                self.objectCandidates.remove(prevGuess)
+
             self.nextRun()
 
     def onReceivedSolution(self, _solution):
-        print("OnReceivedSolution: " + _solution)
         self.updateData(_solution)
         self.initRound()
         self.guessEvent.onRoundFinished.emit()
 
     def updateData(self, _solution):
-        # TODO: if solution already in list of objects, update properties
-        #       else: add new object and the stored property values
-
         self.data.addOrUpdateObject(_solution, self.properties)
         self.data.saveObjects()
         self.data.saveProperties()
