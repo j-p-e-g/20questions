@@ -38,9 +38,12 @@ class GameData():
             print("ERROR: Trying to open non-existing file " + OBJECTS_DATA_FILE + "!")
 
     def addOrUpdateObject(self, _name, _allProperties):
+
+        article, noun = self.phrasing.splitStringIntoArticleAndNoun(_name)
+
         if self.objectsMainAttribute in self.objects:
             for obj in self.objects[self.objectsMainAttribute]:
-                if obj["name"] == _name:
+                if obj["name"] == noun:
                     # the object already exists -> update properties
 
                     _objProperties = []
@@ -82,7 +85,8 @@ class GameData():
                 properties.append(propEntry)
 
         newObject = {}
-        newObject["article"], newObject["name"] = self.phrasing.splitStringIntoArticleAndNoun(_name)
+        newObject["article"] = article
+        newObject["name"] = noun
         newObject["properties"] = properties
 
         self.objects[self.objectsMainAttribute].append(newObject)

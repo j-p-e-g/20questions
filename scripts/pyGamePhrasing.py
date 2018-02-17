@@ -53,7 +53,28 @@ class GamePhrasing():
         return word == "a" or word == "an" or word == "the"
 
     def isVowel(self, char):
-        return char == 'a' or char == 'e' or char == 'i' or char == 'o'
+        return char == 'a' or char == 'e' or char == 'i' or char == 'o' or char == 'u'
+
+    def startsWithVowelSound(self, word):
+        if len(word) == 0:
+            return False
+
+        if not self.isVowel(word[0]):
+            return False
+
+        # one of the other vowels
+        if word[0] != 'u':
+            return True
+
+        # specialcase words starting with 'u'
+        if len(word) == 2: # us, up
+            return True
+
+        # ugly, uncle, usher, ...
+        if not self.isVowel(word[1]) and not self.isVowel(word[2]):
+            return True
+
+        return False
 
     def splitStringIntoArticleAndNoun(self, _str):
         elements = _str.split()
@@ -66,7 +87,7 @@ class GamePhrasing():
                 noun = " ".join(elements[1:len(elements)])
 
         if article == "":
-            if self.isVowel(noun[0]):
+            if self.startsWithVowelSound(noun):
                 article = "an"
             else:
                 article = "a"
