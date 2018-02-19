@@ -19,42 +19,71 @@ class DebugPropertyTab(scrollBar.ScrollBar):
     def displayProperties(self):
         display = []
 
-        # first add properties that already got asked
-        display.append("<h3>Asked</h3>")
+        triedProperties = {}
+        untriedProperties = {}
 
         for prop in self.logic.properties:
             propEntry = self.logic.properties[prop]
             if propEntry["tried"]:
-                display.append(self.constructPropertyDisplay(prop, propEntry))
+                triedProperties[prop] = propEntry
+            else:
+                untriedProperties[prop] = propEntry
 
-        # then add the remaining properties
-        # TODO: sort by probability (?)
+        # first add properties that already got asked (sort by order they were asked)
+        display.append("<h3>Asked</h3>")
+
+        def sortByNum(value):
+            key, dict = value
+            return dict["order"]
+
+        for propId, propEntry in sorted(triedProperties.items(), key = sortByNum):
+            orderDesc = str(propEntry["order"]) + ". "
+
+            question = orderDesc + self.data.constructQuestion(propId) + "</b> (" + str(propId) + ")"
+            display.append("<h4>" + question + "</h4>")
+
+            value = propEntry["value"]
+            objects = propEntry["objects"]
+
+            color = "black"
+            if value == KnowledgeValues.YES:
+                color = "green"
+            elif value == KnowledgeValues.NO:
+                color = "red"
+
+            answerText = "<font color=\"" + color + "\">" + self.phrasing.getTextForKnowledgeValue(value) + "</font>"
+
+            excludedObjectNames = ""
+            if value == KnowledgeValues.NO and len(objects[self.logic.yesValueText]) > 0:
+                excludedObjectNames = ", ".join(objects[self.logic.yesValueText])
+            elif value == KnowledgeValues.YES and len(objects[self.logic.noValueText]) > 0:
+                excludedObjectNames = ", ".join(objects[self.logic.noValueText])
+
+            if excludedObjectNames != "":
+                display.append(answerText + ": <s>" + excludedObjectNames + "</s>")
+            else:
+                display.append(answerText)
+
+        # then add the remaining properties (sort by score)
         display.append("<hr>")
         display.append("<h3>Other</h3>")
 
-        for prop in self.logic.properties:
-            propEntry = self.logic.properties[prop]
-            if not propEntry["tried"]:
-                display.append(self.constructPropertyDisplay(prop, propEntry))
+        def sortByScore(value):
+            key, dict = value
+            return dict["score"]
+
+        for propId, propEntry in sorted(untriedProperties.items(), key = sortByScore, reverse = True):
+            question = self.data.constructQuestion(propId) + " (" + str(propId) + ")"
+            display.append("<h4>" + question + "</h4>")
+            display.append("Score: " + "{:.2f}".format(propEntry["score"]))
+
+            objects = propEntry["objects"]
+            if len(objects[self.logic.yesValueText]) > 0:
+                display.append(self.logic.yesValueText + ": " + ", ".join(objects[self.logic.yesValueText]))
+            if len(objects[self.logic.noValueText]) > 0:
+                display.append(self.logic.noValueText + ": " + ", ".join(objects[self.logic.noValueText]))
 
         self.update(display)
-
-    def constructPropertyDisplay(self, _identifier, _data):
-        question = self.data.constructQuestion(_identifier) + " (" + str(_identifier) + ")"
-
-        value = _data["value"]
-        color = "black"
-        if value == KnowledgeValues.YES:
-            color = "green"
-        elif value == KnowledgeValues.NO:
-            color = "red"
-
-        answerText = self.phrasing.getTextForKnowledgeValue(_data["value"])
-        answer = "<font color=\"" + color + "\">" + answerText + "</font>"
-
-        line = question + " : " + answer
-        return line
-
 
 class DebugObjectTab(scrollBar.ScrollBar):
     def __init__(self, _logic, _scrollToBottom):
@@ -79,11 +108,11 @@ class DebugObjectTab(scrollBar.ScrollBar):
             key, dict = value
             return dict["score"]
 
-        for objName, objEntry in sorted(self.logic.objects.items(), key = sortByScore, reverse=True):
+        for objName, objEntry in sorted(self.logic.objects.items(), key = sortByScore, reverse = True):
             display.append("<h3>" + objName + "</h3>")
 
             objScore = objEntry["score"]
-            display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b")
+            display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b>")
 
             objProperties = objEntry["properties"]
 

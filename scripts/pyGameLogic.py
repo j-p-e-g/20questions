@@ -31,7 +31,8 @@ class GameLogic():
         self.properties = {}
         self.objects = {}
         self.messageHistory = msgHistory.MessageHistory()
-        self.debugScore = False
+        self.debugObjectScore = False
+        self.debugPropertyScore = False
 
         self.guessEvent = GuessEvent()
         self.inputEvent = InputEvent()
@@ -42,8 +43,8 @@ class GameLogic():
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
         self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
 
-        self.debugEvent.onObjectsUpdated.connect(self.updateObjectScore)
-        self.debugEvent.onPropertiesUpdated.connect(self.updateObjectScore)
+        self.debugEvent.onObjectsUpdated.connect(self.updateScores)
+        self.debugEvent.onPropertiesUpdated.connect(self.updateScores)
 
         self.yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
         self.noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
@@ -53,11 +54,18 @@ class GameLogic():
 
     def initRound(self):
         self.previousQuestion = 0
+        self.numCurrentQuestion = 0
+
         self.guesses = []
         self.objectCandidates = []
 
         self.initProperties()
         self.initObjects()
+        self.updateScores()
+
+    def updateScores(self):
+        self.updateObjectScore()
+        self.updatePropertyScore()
 
     def initProperties(self):
         self.properties = {}
@@ -73,6 +81,8 @@ class GameLogic():
             propEntry["objects"] = {}
             propEntry["objects"][self.yesValueText] = []
             propEntry["objects"][self.noValueText] = []
+
+            propEntry["score"] = 0
 
             self.properties[prop["identifier"]] = propEntry
 
@@ -125,8 +135,38 @@ class GameLogic():
 
             self.objects[name] = objEntry
 
+    def updatePropertyScore(self):
+        if self.debugPropertyScore:
+            print("\nupdatePropertyScore")
+
+        countTotalObjects = len(self.objects) + 2
+
+        for propId in self.properties:
+            propEntry = self.properties[propId]
+
+            objects = propEntry["objects"]
+            countYes = 1
+            countNo = 1
+
+            for objYes in objects[self.yesValueText]:
+                if objYes in self.objectCandidates:
+                    countYes = countYes + 1
+
+            for objNo in objects[self.noValueText]:
+                if objNo in self.objectCandidates:
+                    countNo = countNo + 1
+
+            score = (countYes/countTotalObjects) * (countNo/countTotalObjects)
+            propEntry["score"] = score
+
+            if self.debugPropertyScore:
+                print("\t" + propEntry["desc"] + " (" + str(propId) + ")")
+                print("\t\t#countYes: " + str(countYes))
+                print("\t\t#countNo: " + str(countNo))
+                print("\t==> score: " + str(score) + "\n")
+
     def updateObjectScore(self):
-        if self.debugScore:
+        if self.debugObjectScore:
             print("\nupdateObjectScore")
 
         # increase total count by 1 to ensure we never divide by zero
@@ -161,7 +201,7 @@ class GameLogic():
             score = (countTotalProperties * mismatchRatio + matchRatio)/(countTotalProperties+1)
             objEntry["score"] = score
 
-            if self.debugScore:
+            if self.debugObjectScore:
                 print("\t" + objId)
                 print("\t\t#matches: " + str(countMatches))
                 print("\t\t#mismatches: " + str(countMismatches))
@@ -200,18 +240,35 @@ class GameLogic():
         self.guessEvent.onRequestSolution.emit()
 
     def tryFindGoodQuestion(self):
+        bestProperty = -1
+        bestScore = -1
+
         for identifier in self.properties:
-            entry = self.properties[identifier]
-            if entry["tried"]:
+            propEntry = self.properties[identifier]
+            if propEntry["tried"]:
                 continue
 
-            question = self.data.constructQuestion(identifier)
-            if question != "":
-                self.previousQuestion = identifier
-                self.guessEvent.onQuestionSent.emit(question)
-                entry["tried"] = True
-                self.debugEvent.onPropertiesUpdated.emit()
-                return True
+            score = propEntry["score"]
+            if score > bestScore:
+                bestProperty = identifier
+                bestScore = score
+
+        if bestProperty == -1:
+            return False
+
+        question = self.data.constructQuestion(bestProperty)
+        if question != "":
+            self.previousQuestion = bestProperty
+            self.guessEvent.onQuestionSent.emit(question)
+
+            self.numCurrentQuestion = self.numCurrentQuestion + 1
+
+            propEntry = self.properties[bestProperty]
+            propEntry["order"] = self.numCurrentQuestion
+            propEntry["tried"] = True
+
+            self.debugEvent.onPropertiesUpdated.emit()
+            return True
 
         return False
 
@@ -243,7 +300,6 @@ class GameLogic():
 
     def onReceivedQuestionAnswer(self, _buttonText):
         value = self.data.phrasing.getKnowledgeValueForText(_buttonText)
-        print("onReceivedQuestionAnswer: " + _buttonText + " -> " + str(value))
 
         if self.previousQuestion in self.properties:
             entry = self.properties[self.previousQuestion]

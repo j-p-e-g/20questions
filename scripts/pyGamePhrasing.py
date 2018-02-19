@@ -92,5 +92,4 @@ class GamePhrasing():
             else:
                 article = "a"
 
-        print(_str + " split into '" + article + "' and '" + noun + "'")
         return article, noun

@@ -109,7 +109,6 @@ class GameData():
             print("ERROR: Missing '" + self.objectsMainAttribute + "' key in " + OBJECTS_DATA_FILE)
 
     def saveObjects(self):
-        print("saving objects")
         with open(OBJECTS_DATA_FILE, "w") as outfile:
             json.dump(self.objects, outfile, indent=4)
 
@@ -139,7 +138,6 @@ class GameData():
             print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + PROPERTIES_DATA_FILE)
 
     def saveProperties(self):
-        print("saving properties")
         with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
 
