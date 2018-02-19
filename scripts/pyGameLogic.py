@@ -31,6 +31,7 @@ class GameLogic():
         self.properties = {}
         self.objects = {}
         self.messageHistory = msgHistory.MessageHistory()
+        self.debugScore = False
 
         self.guessEvent = GuessEvent()
         self.inputEvent = InputEvent()
@@ -40,6 +41,9 @@ class GameLogic():
         self.inputEvent.onQuestionAnswered.connect(self.onReceivedQuestionAnswer)
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
         self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
+
+        self.debugEvent.onObjectsUpdated.connect(self.updateObjectScore)
+        self.debugEvent.onPropertiesUpdated.connect(self.updateObjectScore)
 
         self.yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
         self.noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
@@ -117,7 +121,53 @@ class GameLogic():
             objEntry["properties"][self.noValueText] = noProperties
             objEntry["properties"][self.maybeValueText] = maybeProperties
 
+            objEntry["score"] = 0
+
             self.objects[name] = objEntry
+
+    def updateObjectScore(self):
+        if self.debugScore:
+            print("\nupdateObjectScore")
+
+        # increase total count by 1 to ensure we never divide by zero
+        countTotalProperties = len(self.properties) + 1
+
+        for objId in self.objects:
+            countMatches = 0
+            countMismatches = 0
+
+            objEntry = self.objects[objId]
+            objProperties = objEntry["properties"]
+            for yespropid in objProperties[self.yesValueText]:
+                if yespropid in self.properties:
+                    propEntry = self.properties[yespropid]
+                    value = propEntry["value"]
+                    if value == KnowledgeValues.YES:
+                        countMatches = countMatches + 1
+                    elif value == KnowledgeValues.NO:
+                        countMismatches = countMismatches + 1
+
+            for nopropid in objProperties[self.noValueText]:
+                if nopropid in self.properties:
+                    propEntry = self.properties[nopropid]
+                    value = propEntry["value"]
+                    if value == KnowledgeValues.YES:
+                        countMismatches = countMismatches + 1
+                    elif value == KnowledgeValues.NO:
+                        countMatches = countMatches + 1
+
+            matchRatio = countMatches/countTotalProperties
+            mismatchRatio = 1 - (countMismatches/countTotalProperties)
+            score = (countTotalProperties * mismatchRatio + matchRatio)/(countTotalProperties+1)
+            objEntry["score"] = score
+
+            if self.debugScore:
+                print("\t" + objId)
+                print("\t\t#matches: " + str(countMatches))
+                print("\t\t#mismatches: " + str(countMismatches))
+                print("\t\t#matchRatio: " + str(matchRatio))
+                print("\t\t#mismatchRatio: " + str(mismatchRatio))
+                print("\t==> score: " + str(score) + "\n")
 
     def startRound(self):
         self.nextRun()
@@ -166,16 +216,28 @@ class GameLogic():
         return False
 
     def tryFindGoodGuess(self):
+        bestGuess = ""
+        bestScore = -1
+
         for objName in self.objectCandidates:
             if objName in self.guesses:
                 continue
 
-            guess = self.data.constructGuess(objName)
-            if guess != "":
-                self.guesses.append(objName)
-                self.guessEvent.onGuessSent.emit(guess)
-                self.debugEvent.onObjectsUpdated.emit()
-                return True
+            if objName in self.objects:
+                score = self.objects[objName]["score"]
+                if score > bestScore:
+                    bestScore = score
+                    bestGuess = objName
+
+        if bestGuess == "":
+            return False
+
+        guessText = self.data.constructGuess(bestGuess)
+        if guessText != "":
+            self.guesses.append(bestGuess)
+            self.guessEvent.onGuessSent.emit(guessText)
+            self.debugEvent.onObjectsUpdated.emit()
+            return True
 
         return False
 

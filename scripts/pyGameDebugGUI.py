@@ -75,10 +75,16 @@ class DebugObjectTab(scrollBar.ScrollBar):
         yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
         noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
 
-        # TODO: sort objects by probability
-        for objName in self.logic.objects:
+        def sortByScore(value):
+            key, dict = value
+            return dict["score"]
+
+        for objName, objEntry in sorted(self.logic.objects.items(), key = sortByScore, reverse=True):
             display.append("<h3>" + objName + "</h3>")
-            objEntry = self.logic.objects[objName]
+
+            objScore = objEntry["score"]
+            display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b")
+
             objProperties = objEntry["properties"]
 
             for prop in objProperties[yesValueText]:

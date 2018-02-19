@@ -9,6 +9,16 @@
             "identifier": 7269,
             "modal_verb": "is",
             "suffix": "a type of fruit"
+        },
+        {
+            "identifier": 37622,
+            "modal_verb": "is",
+            "suffix": "round"
+        },
+        {
+            "identifier": 984,
+            "modal_verb": "is",
+            "suffix": "an animal"
         }
     ]
 }

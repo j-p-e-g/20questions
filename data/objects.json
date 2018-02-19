@@ -11,6 +11,14 @@
                 {
                     "identifier": 7269,
                     "value": 2
+                },
+                {
+                    "identifier": 37622,
+                    "value": 2
+                },
+                {
+                    "identifier": 984,
+                    "value": 2
                 }
             ]
         },
@@ -30,7 +38,69 @@
             "properties": [
                 {
                     "identifier": 12563,
-                    "value": 0
+                    "value": 2
+                },
+                {
+                    "identifier": 7269,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "an",
+            "name": "apple",
+            "properties": [
+                {
+                    "identifier": 12563,
+                    "value": 2
+                },
+                {
+                    "identifier": 7269,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "bird",
+            "properties": [
+                {
+                    "identifier": 12563,
+                    "value": 1
+                },
+                {
+                    "identifier": 7269,
+                    "value": 2
+                },
+                {
+                    "identifier": 37622,
+                    "value": 2
+                },
+                {
+                    "identifier": 984,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "cat",
+            "properties": [
+                {
+                    "identifier": 12563,
+                    "value": 2
+                },
+                {
+                    "identifier": 7269,
+                    "value": 2
+                },
+                {
+                    "identifier": 37622,
+                    "value": 2
+                },
+                {
+                    "identifier": 984,
+                    "value": 1
                 }
             ]
         }
