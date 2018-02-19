@@ -101,48 +101,59 @@ class DebugObjectTab(scrollBar.ScrollBar):
     def displayObjects(self):
         display = []
 
-        yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
-        noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
-
         def sortByScore(value):
             key, dict = value
             return dict["score"]
 
         for objName, objEntry in sorted(self.logic.objects.items(), key = sortByScore, reverse = True):
-            display.append("<h3>" + objName + "</h3>")
+            if objName in self.logic.guesses:
+                display.append("<s><h3>" + objName + "</h3></s>")
+                display = self.displayObject(display, objEntry)
 
-            objScore = objEntry["score"]
-            display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b>")
-
-            objProperties = objEntry["properties"]
-
-            for prop in objProperties[yesValueText]:
-                propEntry = self.logic.properties[prop]
-
-                color = "black"
-                value = propEntry["value"]
-                if value == KnowledgeValues.YES:
-                    color = "green"
-                elif value == KnowledgeValues.NO:
-                    color = "red"
-
-                desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + yesValueText + "</font>"
-                display.append(desc)
-
-            for prop in objProperties[noValueText]:
-                propEntry = self.logic.properties[prop]
-
-                color = "black"
-                value = propEntry["value"]
-                if value == KnowledgeValues.NO:
-                    color = "green"
-                elif value == KnowledgeValues.YES:
-                    color = "red"
-
-                desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + noValueText + "</font>"
-                display.append(desc)
+        display.append("<hr>")
+        for objName, objEntry in sorted(self.logic.objects.items(), key = sortByScore, reverse = True):
+            if not objName in self.logic.guesses:
+                display.append("<h3>" + objName + "</h3>")
+                display = self.displayObject(display, objEntry)
 
         self.update(display)
+
+    def displayObject(self, _display, _objEntry):
+        yesValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.YES)
+        noValueText = self.phrasing.getTextForKnowledgeValue(KnowledgeValues.NO)
+
+        objScore = _objEntry["score"]
+        objProperties = _objEntry["properties"]
+
+        _display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b>")
+
+        for prop in objProperties[yesValueText]:
+            propEntry = self.logic.properties[prop]
+
+            color = "black"
+            value = propEntry["value"]
+            if value == KnowledgeValues.YES:
+                color = "green"
+            elif value == KnowledgeValues.NO:
+                color = "red"
+
+            desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + yesValueText + "</font>"
+            _display.append(desc)
+
+        for prop in objProperties[noValueText]:
+            propEntry = self.logic.properties[prop]
+
+            color = "black"
+            value = propEntry["value"]
+            if value == KnowledgeValues.NO:
+                color = "green"
+            elif value == KnowledgeValues.YES:
+                color = "red"
+
+            desc = "<font color=\"" + color + "\">\t" + propEntry["desc"] + " : " + noValueText + "</font>"
+            _display.append(desc)
+
+        return _display
 
 
 # window capable of showing debug information

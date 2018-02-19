@@ -9,6 +9,7 @@ class InputEvent(QObject):
     onQuestionAnswered = pyqtSignal(str)
     onGuessReaction = pyqtSignal(bool)
     onSolutionSent = pyqtSignal(str)
+    onRestart = pyqtSignal()
 
 
 class GuessEvent(QObject):
@@ -42,6 +43,7 @@ class GameLogic():
         self.inputEvent.onQuestionAnswered.connect(self.onReceivedQuestionAnswer)
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
         self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
+        self.inputEvent.onRestart.connect(self.onRestart)
 
         self.debugEvent.onObjectsUpdated.connect(self.updateScores)
         self.debugEvent.onPropertiesUpdated.connect(self.updateScores)
@@ -61,7 +63,10 @@ class GameLogic():
 
         self.initProperties()
         self.initObjects()
-        self.updateScores()
+
+        # send these now that both sets have been initialized
+        self.debugEvent.onObjectsUpdated.emit()
+        self.debugEvent.onPropertiesUpdated.emit()
 
     def updateScores(self):
         self.updateObjectScore()
@@ -298,6 +303,10 @@ class GameLogic():
 
         return False
 
+    def onRestart(self):
+        self.initRound()
+        self.guessEvent.onRoundFinished.emit()
+
     def onReceivedQuestionAnswer(self, _buttonText):
         value = self.data.phrasing.getKnowledgeValueForText(_buttonText)
 
@@ -335,8 +344,7 @@ class GameLogic():
                 return
 
             self.updateData(prevGuess)
-            self.initRound()
-            self.guessEvent.onRoundFinished.emit()
+            self.onRestart()
         else:
             # keep asking
             if prevGuess in self.objectCandidates:
@@ -346,8 +354,7 @@ class GameLogic():
 
     def onReceivedSolution(self, _solution):
         self.updateData(_solution)
-        self.initRound()
-        self.guessEvent.onRoundFinished.emit()
+        self.onRestart()
 
     def updateData(self, _solution):
         self.data.addOrUpdateObject(_solution, self.properties)

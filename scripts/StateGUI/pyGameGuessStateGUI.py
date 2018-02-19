@@ -32,10 +32,17 @@ class GuessStateWidget(QWidget):
         buttonNo.setFont(QFont("Arial", 12))
         buttonNo.clicked.connect(self.onAnswerGuessFalse)
 
+        emptyLabel = QLabel("", self)
+
+        buttonRestartText = self.phrasing.constructRestartButtonText()
+        buttonRestart = QPushButton(buttonRestartText, self)
+        buttonRestart.setFont(QFont("Arial", 12))
+        buttonRestart.clicked.connect(self.onRestart)
+
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, buttonYes, buttonNo])
+        widget = BoxWidget([label, buttonYes, buttonNo, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
 
     def onAnswerGuessTrue(self):
@@ -49,3 +56,6 @@ class GuessStateWidget(QWidget):
         self.logic.inputEvent.onGuessReaction.emit(False)
         self.close()
 
+    def onRestart(self):
+        self.logic.inputEvent.onRestart.emit()
+        self.close()

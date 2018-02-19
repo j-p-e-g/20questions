@@ -39,14 +39,20 @@ class GamePhrasing():
         return question
 
     def constructGuess(self, _article, _noun):
-        guess = "I think it's " + _article + " " + _noun + "."
+        guess = "I think the answer is \"" + _article + " " + _noun + "\"."
         return guess
 
     def constructSolutionRequest(self):
         return "I give up! What is it?"
 
     def constructSolutionButtonText(self):
-        return "Send"
+        return "Add object"
+
+    def constructPropertyButtonText(self):
+        return "Add attribute"
+
+    def constructRestartButtonText(self):
+        return "Restart"
 
     # helper methods
     def isArticle(self, word):

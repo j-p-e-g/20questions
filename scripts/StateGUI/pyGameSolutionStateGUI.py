@@ -32,10 +32,17 @@ class SolutionStateWidget(QWidget):
         button.setFont(QFont("Arial", 12))
         button.clicked.connect(self.onSolutionSent)
 
+        emptyLabel = QLabel("", self)
+
+        buttonRestartText = self.phrasing.constructRestartButtonText()
+        buttonRestart = QPushButton(buttonRestartText, self)
+        buttonRestart.setFont(QFont("Arial", 12))
+        buttonRestart.clicked.connect(self.onRestart)
+
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, self.solutionTextBox, button])
+        widget = BoxWidget([label, self.solutionTextBox, button, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
 
     def onSolutionSent(self):
@@ -49,3 +56,6 @@ class SolutionStateWidget(QWidget):
             self.messageHistory.addProgramMessage(msg)
             print(msg)
 
+    def onRestart(self):
+        self.logic.inputEvent.onRestart.emit()
+        self.close()

@@ -47,10 +47,17 @@ class QuestionStateWidget(QWidget):
         buttonUnknown.clicked.connect(self.onAnswerQuestion)
         buttonUnknown.setMinimumWidth(maxTextWidth)
 
+        emptyLabel = QLabel("", self)
+
+        buttonRestartText = self.phrasing.constructRestartButtonText()
+        buttonRestart = QPushButton(buttonRestartText, self)
+        buttonRestart.setFont(QFont("Arial", 12))
+        buttonRestart.clicked.connect(self.onRestart)
+
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, buttonYes, buttonNo, buttonMaybe, buttonUnknown])
+        widget = BoxWidget([label, buttonYes, buttonNo, buttonMaybe, buttonUnknown, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
 
     def onAnswerQuestion(self):
@@ -59,3 +66,6 @@ class QuestionStateWidget(QWidget):
         self.logic.inputEvent.onQuestionAnswered.emit(buttonText)
         self.close()
 
+    def onRestart(self):
+        self.logic.inputEvent.onRestart.emit()
+        self.close()
