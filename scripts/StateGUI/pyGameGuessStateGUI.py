@@ -16,8 +16,6 @@ class GuessStateWidget(QWidget):
         self.displayGuessState(_guess)
 
     def displayGuessState(self, _guess):
-        self.messageHistory.addProgramMessage(_guess)
-
         label = QLabel(_guess, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
@@ -57,5 +55,7 @@ class GuessStateWidget(QWidget):
         self.close()
 
     def onRestart(self):
+        buttonText = self.sender().text()
+        self.messageHistory.addPlayerMessage(buttonText)
         self.logic.inputEvent.onRestart.emit()
         self.close()

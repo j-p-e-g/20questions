@@ -15,8 +15,6 @@ class QuestionStateWidget(QWidget):
         self.displayQuestionState(_question)
 
     def displayQuestionState(self, _question):
-        self.messageHistory.addProgramMessage(_question)
-
         label = QLabel(_question, self)
         label.setFont(QFont("Arial", 14))
         label.setStyleSheet("QLabel { color : blue; }");
@@ -67,5 +65,7 @@ class QuestionStateWidget(QWidget):
         self.close()
 
     def onRestart(self):
+        buttonText = self.sender().text()
+        self.messageHistory.addPlayerMessage(buttonText)
         self.logic.inputEvent.onRestart.emit()
         self.close()

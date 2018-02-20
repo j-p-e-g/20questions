@@ -57,5 +57,7 @@ class SolutionStateWidget(QWidget):
             print(msg)
 
     def onRestart(self):
+        buttonText = self.sender().text()
+        self.messageHistory.addPlayerMessage(buttonText)
         self.logic.inputEvent.onRestart.emit()
         self.close()

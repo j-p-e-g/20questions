@@ -35,6 +35,10 @@ class GameLogic():
         self.debugObjectScore = False
         self.debugPropertyScore = False
 
+        self.numCurrentRound = 0
+        self.numCurrentQuestion = 0
+        self.numCurrentGuess = 0
+
         self.guessEvent = GuessEvent()
         self.inputEvent = InputEvent()
         self.debugEvent = DebugEvent()
@@ -55,8 +59,12 @@ class GameLogic():
         self.initRound()
 
     def initRound(self):
+        self.numCurrentRound = self.numCurrentRound + 1
+        self.messageHistory.addFormattedMessage("Round " + str(self.numCurrentRound), "green")
+
         self.previousQuestion = 0
         self.numCurrentQuestion = 0
+        self.numCurrentGuess = 0
 
         self.guesses = []
         self.objectCandidates = []
@@ -220,11 +228,7 @@ class GameLogic():
     def nextRun(self):
 
         if len(self.objectCandidates) == 1:
-            guess = self.data.constructGuess(self.objectCandidates[0])
-            if guess != "":
-                self.guesses.append(self.objectCandidates[0])
-                self.guessEvent.onGuessSent.emit(guess)
-                self.debugEvent.onObjectsUpdated.emit()
+            if self.setupGuess(self.objectCandidates[0]):
                 return
 
         # 1. iterate over all properties for the current guess
@@ -264,13 +268,13 @@ class GameLogic():
         question = self.data.constructQuestion(bestProperty)
         if question != "":
             self.previousQuestion = bestProperty
-            self.guessEvent.onQuestionSent.emit(question)
 
             self.numCurrentQuestion = self.numCurrentQuestion + 1
+            self.messageHistory.addProgramMessage(str(self.numCurrentQuestion) + ". question: " + question)
+            self.guessEvent.onQuestionSent.emit(question)
 
             propEntry = self.properties[bestProperty]
             propEntry["order"] = self.numCurrentQuestion
-            propEntry["tried"] = True
 
             self.debugEvent.onPropertiesUpdated.emit()
             return True
@@ -294,14 +298,21 @@ class GameLogic():
         if bestGuess == "":
             return False
 
-        guessText = self.data.constructGuess(bestGuess)
-        if guessText != "":
-            self.guesses.append(bestGuess)
-            self.guessEvent.onGuessSent.emit(guessText)
-            self.debugEvent.onObjectsUpdated.emit()
-            return True
+        return self.setupGuess(bestGuess)
 
-        return False
+    def setupGuess(self, bestGuess):
+        guessText = self.data.constructGuess(bestGuess)
+        if guessText == "":
+            return False
+
+        self.guesses.append(bestGuess)
+
+        self.numCurrentGuess = self.numCurrentGuess + 1
+        self.messageHistory.addProgramMessage(str(self.numCurrentGuess) + ". guess: " + guessText)
+        self.guessEvent.onGuessSent.emit(guessText)
+
+        # self.debugEvent.onObjectsUpdated.emit()
+        return True
 
     def onRestart(self):
         self.initRound()
@@ -311,17 +322,18 @@ class GameLogic():
         value = self.data.phrasing.getKnowledgeValueForText(_buttonText)
 
         if self.previousQuestion in self.properties:
-            entry = self.properties[self.previousQuestion]
-            entry["value"] = value
+            propEntry = self.properties[self.previousQuestion]
+            propEntry["value"] = value
+            propEntry["tried"] = True
 
             # If the player answered yes or no, remove all objects with the opposite value
             # from the list of candidates.
             if value == KnowledgeValues.YES:
-                for objName in entry["objects"][self.noValueText]:
+                for objName in propEntry["objects"][self.noValueText]:
                     if objName in self.objectCandidates:
                         self.objectCandidates.remove(objName)
             elif value == KnowledgeValues.NO:
-                for objName in entry["objects"][self.yesValueText]:
+                for objName in propEntry["objects"][self.yesValueText]:
                     if objName in self.objectCandidates:
                         self.objectCandidates.remove(objName)
 

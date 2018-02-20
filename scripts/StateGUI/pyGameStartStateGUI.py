@@ -14,8 +14,6 @@ class StartStateWidget(QWidget):
         self.displayStartState()
 
     def displayStartState(self):
-        self.messageHistory.addFormattedMessage("New round", "green")
-
         msg = self.phrasing.constructInitialPrompt()
         self.messageHistory.addProgramMessage(msg)
 
