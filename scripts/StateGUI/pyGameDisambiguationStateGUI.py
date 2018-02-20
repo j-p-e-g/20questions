@@ -55,15 +55,11 @@ class DisambiguationStateWidget(QWidget):
         sentenceStartWidget = QWidget(self)
         sentenceStartWidget.setLayout(hLayoutStart)
 
-        # allow the player to either choose from a dropdown menu of existing objects, or add a new one
+        # allow the player to either choose from a dropdown menu of existing properties, or add a new one
         self.suffixComboBox = QComboBox()
         self.suffixComboBox.setFont(QFont("Arial", 12))
         self.fillSuffixComboBox()
         self.suffixComboBox.currentIndexChanged.connect(self.onSuffixComboBoxIndexChanged)
-
-        orLabel = QLabel("or", self)
-        orLabel.setFont(QFont("Arial", 12))
-        orLabel.setAlignment(Qt.AlignCenter)
 
         self.suffixTextBox = QLineEdit(self)
         self.suffixTextBox.setFont(QFont("Arial", 12))
@@ -81,14 +77,13 @@ class DisambiguationStateWidget(QWidget):
         hLayoutEnd.addWidget(self.suffixTextBox)
         hLayoutEnd.addWidget(sentenceEndLabel)
 
-        sentenceEndWidget = QWidget(self)
-        sentenceEndWidget.setLayout(hLayoutEnd)
+        self.sentenceEndWidget = QWidget(self)
+        self.sentenceEndWidget.setLayout(hLayoutEnd)
 
         vLayout = QVBoxLayout()
         vLayout.addWidget(sentenceStartWidget)
         vLayout.addWidget(self.suffixComboBox)
-        vLayout.addWidget(orLabel)
-        vLayout.addWidget(sentenceEndWidget)
+        vLayout.addWidget(self.sentenceEndWidget)
 
         sentenceWidget = QWidget(self)
         sentenceWidget.setLayout(vLayout)
@@ -118,7 +113,7 @@ class DisambiguationStateWidget(QWidget):
         modalVerb = self.verbComboBox.currentText()
 
         self.suffixComboBox.clear()
-        self.suffixComboBox.addItem("(existing attribute)")
+        self.suffixComboBox.addItem("add new attribute, or pick one:")
 
         # add new entries
         propertyList = self.data.getListOfAllSuffixesMatchingVerb(modalVerb)
@@ -136,7 +131,10 @@ class DisambiguationStateWidget(QWidget):
 
     def onSuffixComboBoxIndexChanged(self, index):
         if index != 0:
+            self.sentenceEndWidget.setVisible(False)
             self.suffixTextBox.setText("")
+        else:
+            self.sentenceEndWidget.setVisible(True)
 
         self.updateSendButton()
 

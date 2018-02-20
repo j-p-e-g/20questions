@@ -29,14 +29,10 @@ class SolutionStateWidget(QWidget):
 
         self.comboBox = QComboBox()
         self.comboBox.setFont(QFont("Arial", 12))
-        self.comboBox.addItem("(existing object)")
+        self.comboBox.addItem("add new object, or pick one:")
         for objName in objectList:
             self.comboBox.addItem(objName)
         self.comboBox.currentIndexChanged.connect(self.onComboBoxIndexChanged)
-
-        orLabel = QLabel("or", self)
-        orLabel.setFont(QFont("Arial", 12))
-        orLabel.setAlignment(Qt.AlignCenter)
 
         self.solutionTextBox = QLineEdit(self)
         self.solutionTextBox.setFont(QFont("Arial", 12))
@@ -60,12 +56,15 @@ class SolutionStateWidget(QWidget):
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, emptyLabel, self.comboBox, orLabel, self.solutionTextBox, emptyLabel, self.sendButton, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
+        widget = BoxWidget([label, emptyLabel, self.comboBox, self.solutionTextBox, emptyLabel, self.sendButton, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
 
     def onComboBoxIndexChanged(self, index):
         if index != 0:
+            self.solutionTextBox.setVisible(False)
             self.solutionTextBox.setText("")
+        else:
+            self.solutionTextBox.setVisible(True)
 
         self.updateSendButton()
 
