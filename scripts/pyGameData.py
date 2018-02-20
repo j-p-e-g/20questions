@@ -19,6 +19,7 @@ class GameData():
 
         self.objects = {}
         self.properties = {}
+        self.highestPropertyId = 0
 
         self.latestObject = ""
 
@@ -44,34 +45,33 @@ class GameData():
         article, noun = self.phrasing.splitStringIntoArticleAndNoun(_name)
         self.latestObject = noun
 
-        if self.objectsMainAttribute in self.objects:
-            for obj in self.objects[self.objectsMainAttribute]:
-                if obj["name"] == noun:
-                    # the object already exists -> update properties
+        for obj in self.objects[self.objectsMainAttribute]:
+            if obj["name"] == noun:
+                # the object already exists -> update properties
 
-                    _objProperties = []
+                _objProperties = []
 
-                    # replace existing property values
-                    for prop in obj["properties"]:
-                        identifier = prop["identifier"]
-                        if identifier in _allProperties:
-                            _objProperties.append(identifier)
-                            value = _allProperties[identifier]["value"]
-                            if value != prop["value"]:
-                                if value == KnowledgeValues.YES or value == KnowledgeValues.NO:
-                                    prop["value"] = value
-
-                    # add new properties
-                    for propId in _allProperties:
-                        if propId not in _objProperties:
-                            value = _allProperties[propId]["value"]
+                # replace existing property values
+                for prop in obj["properties"]:
+                    identifier = prop["identifier"]
+                    if identifier in _allProperties:
+                        _objProperties.append(identifier)
+                        value = _allProperties[identifier]["value"]
+                        if value != prop["value"]:
                             if value == KnowledgeValues.YES or value == KnowledgeValues.NO:
-                                obj["properties"].append({
-                                    "identifier": propId,
-                                    "value": value
-                                })
+                                prop["value"] = value
 
-                    return
+                # add new properties
+                for propId in _allProperties:
+                    if propId not in _objProperties:
+                        value = _allProperties[propId]["value"]
+                        if value == KnowledgeValues.YES or value == KnowledgeValues.NO:
+                            obj["properties"].append({
+                                "identifier": propId,
+                                "value": value
+                            })
+
+                return
 
         # not already in the dictionary, so it's a new object
         # TODO: validate _name (?)
@@ -95,6 +95,7 @@ class GameData():
         self.objects[self.objectsMainAttribute].append(newObject)
 
     def printObjects(self):
+        print("Objects:")
         if self.objectsMainAttribute in self.objects:
             count = 0
             for obj in self.objects[self.objectsMainAttribute]:
@@ -106,7 +107,7 @@ class GameData():
                         skip = True
 
                 if not skip:
-                    print(obj["article"] + " " + obj["name"])
+                    print(" - " + obj["article"] + " " + obj["name"])
 
         else:
             print("ERROR: Missing '" + self.objectsMainAttribute + "' key in " + OBJECTS_DATA_FILE)
@@ -123,7 +124,63 @@ class GameData():
         except FileNotFoundError:
             print("ERROR: Trying to open non-existing file " + PROPERTIES_DATA_FILE + "!")
 
+        # update property id counter
+        if self.propertiesMainAttribute in self.properties:
+            for prop in self.properties[self.propertiesMainAttribute]:
+                if prop["identifier"] > self.highestPropertyId:
+                    self.highestPropertyId = prop["identifier"]
+        else:
+            print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + PROPERTIES_DATA_FILE)
+
+    def addOrUpdateProperty(self, _modalVerb, _suffix, _yesObjName, _noObjName):
+
+        identifier = 0
+        for prop in self.properties[self.propertiesMainAttribute]:
+            if prop["modal_verb"] == _modalVerb and prop["suffix"] == _suffix:
+                # the property already exists
+                identifier = prop["identifier"]
+                break
+
+        if identifier == 0:
+            self.highestPropertyId = self.highestPropertyId + 1
+            identifier = self.highestPropertyId
+
+            propEntry = {}
+            propEntry["identifier"] = identifier
+            propEntry["modal_verb"] = _modalVerb
+            propEntry["suffix"] = _suffix
+
+            self.properties[self.propertiesMainAttribute].append(propEntry)
+
+        # update object properties
+        changeCount = 0
+        for obj in self.objects[self.objectsMainAttribute]:
+            if obj["name"] != _yesObjName and obj["name"] != _noObjName:
+                continue
+
+            propEntry = {}
+            propEntry["identifier"] = identifier
+
+            if obj["name"] == _yesObjName:
+                propEntry["value"] = KnowledgeValues.YES
+            else:
+                propEntry["value"] = KnowledgeValues.NO
+
+            properties = obj["properties"]
+            for prop in properties:
+                if prop["identifier"] == identifier:
+                    # update existing property
+                    prop["value"] = propEntry["value"]
+                    return
+
+            obj["properties"].append(propEntry)
+
+            changeCount = changeCount + 1
+            if changeCount == 2:
+                return
+
     def printProperties(self):
+        print("Properties:")
         if self.propertiesMainAttribute in self.properties:
             count = 0
             for prop in self.properties[self.propertiesMainAttribute]:
@@ -135,7 +192,7 @@ class GameData():
                         skip = True
 
                 if not skip:
-                    print(str(prop["identifier"]) + " " + prop["modal_verb"] + " " + prop["suffix"])
+                    print(" - " + prop["modal_verb"] + " " + prop["suffix"] + " (" + str(prop["identifier"]) + ")")
 
         else:
             print("ERROR: Missing '" + self.propertiesMainAttribute + "' key in " + PROPERTIES_DATA_FILE)

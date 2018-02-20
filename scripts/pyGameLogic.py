@@ -381,15 +381,21 @@ class GameLogic():
 
         self.onRestart()
 
-    def onReceivedDisambiguation(self, _modalVerb, _answer, _suffix):
-        print("verb: " + _modalVerb)
-        print("answer: " + str(_answer))
-        print("suffix: " + _suffix)
+    def onReceivedDisambiguation(self, _modalVerb, _negatedForNewObject, _suffix):
+        if _negatedForNewObject:
+            yesObjName = self.bestGuess
+            noObjName = self.data.latestObject
+        else:
+            yesObjName = self.data.latestObject
+            noObjName = self.bestGuess
 
-        # TODO: add to properties, update objects
+        # add to properties, update objects
+        self.data.addOrUpdateProperty(_modalVerb, _suffix, yesObjName, noObjName)
+        self.data.saveObjects()
+        self.data.saveProperties()
+
         self.onRestart()
 
     def updateData(self, _solution):
         self.data.addOrUpdateObject(_solution, self.properties)
         self.data.saveObjects()
-        self.data.saveProperties()

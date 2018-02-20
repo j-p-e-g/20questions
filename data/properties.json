@@ -1,24 +1,29 @@
 {
     "properties": [
         {
-            "identifier": 12563,
+            "identifier": 1,
+            "modal_verb": "is",
+            "suffix": "an animal"
+        },
+        {
+            "identifier": 2,
             "modal_verb": "can",
             "suffix": "fly"
         },
         {
-            "identifier": 7269,
+            "identifier": 3,
+            "modal_verb": "is",
+            "suffix": "a vehicle"
+        },
+        {
+            "identifier": 4,
+            "modal_verb": "is",
+            "suffix": "edible"
+        },
+        {
+            "identifier": 5,
             "modal_verb": "is",
             "suffix": "a type of fruit"
-        },
-        {
-            "identifier": 37622,
-            "modal_verb": "is",
-            "suffix": "round"
-        },
-        {
-            "identifier": 984,
-            "modal_verb": "is",
-            "suffix": "an animal"
         }
     ]
 }
