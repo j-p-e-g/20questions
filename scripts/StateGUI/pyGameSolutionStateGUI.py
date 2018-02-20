@@ -21,11 +21,25 @@ class SolutionStateWidget(QWidget):
 
         label = QLabel(query, self)
         label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("QLabel { color : blue; }");
+        label.setStyleSheet("QLabel { color : blue; }")
+
+        # allow the player to either choose from a dropdown menu of existing objects, or add a new one
+        objectList = self.logic.getListOfAllObjectNames()
+
+        self.comboBox = QComboBox()
+        self.comboBox.setFont(QFont("Arial", 12))
+        self.comboBox.addItem("(existing object)")
+        for objName in objectList:
+            self.comboBox.addItem(objName)
+        self.comboBox.currentIndexChanged.connect(self.onComboBoxIndexChanged)
+
+        orLabel = QLabel("or", self)
+        orLabel.setFont(QFont("Arial", 12))
+        orLabel.setAlignment(Qt.AlignCenter)
 
         self.solutionTextBox = QLineEdit(self)
+        self.solutionTextBox.setFont(QFont("Arial", 12))
         self.solutionTextBox.textChanged.connect(self.onTextInputChanged)
-
         noNumRegex = QRegExp("[a-zA-Z\s-]+")
         self.solutionTextBox.setValidator(QRegExpValidator(noNumRegex, self.solutionTextBox))
 
@@ -45,16 +59,34 @@ class SolutionStateWidget(QWidget):
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, self.solutionTextBox, self.sendButton, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
+        widget = BoxWidget([label, emptyLabel, self.comboBox, orLabel, self.solutionTextBox, emptyLabel, self.sendButton, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
 
+    def onComboBoxIndexChanged(self, index):
+        if index != 0:
+            self.solutionTextBox.setText("")
+
+        self.updateSendButton()
+
     def onTextInputChanged(self):
-        solution = self.solutionTextBox.text()
-        isEmpty = (solution == "")
-        self.sendButton.setEnabled(not isEmpty)
+        if self.solutionTextBox.text() != "":
+            self.comboBox.setCurrentIndex(0)
+
+        self.updateSendButton()
+
+    def updateSendButton(self):
+        if self.comboBox.currentIndex() > 0:
+            self.sendButton.setEnabled(True)
+        else:
+            isEmpty = (self.solutionTextBox.text() == "")
+            self.sendButton.setEnabled(not isEmpty)
 
     def onSolutionSent(self):
-        solution = self.solutionTextBox.text()
+        if self.comboBox.currentIndex() > 0:
+            solution = self.comboBox.currentText()
+        else:
+            solution = self.solutionTextBox.text()
+
         self.messageHistory.addPlayerMessage(solution)
         self.logic.inputEvent.onSolutionSent.emit(solution)
         self.close()
