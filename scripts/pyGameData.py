@@ -221,3 +221,26 @@ class GameData():
                 return self.phrasing.constructGuess(prop["article"], prop["name"])
 
         return ""
+
+    def getListOfAllObjectNames(self):
+        list = []
+
+        def sortByName(value):
+            return value["name"]
+
+        if self.objectsMainAttribute in self.objects:
+            objects = self.objects[self.objectsMainAttribute]
+            for objEntry in sorted(objects, key=sortByName):
+                list.append(objEntry["article"] + " " + objEntry["name"])
+
+        return list
+
+    def getListOfAllSuffixesMatchingVerb(self, _modalVerb):
+        list = []
+
+        if self.propertiesMainAttribute in self.properties:
+            for propEntry in self.properties[self.propertiesMainAttribute]:
+                if propEntry["modal_verb"] == _modalVerb:
+                    list.append(propEntry["suffix"])
+
+        return sorted(list)

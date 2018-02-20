@@ -10,8 +10,9 @@ class SolutionStateWidget(QWidget):
         super().__init__()
 
         self.logic = _logic
+        self.data = self.logic.data
         self.messageHistory = self.logic.messageHistory
-        self.phrasing = self.logic.data.phrasing
+        self.phrasing = self.data.phrasing
 
         self.displaySolutionState()
 
@@ -24,7 +25,7 @@ class SolutionStateWidget(QWidget):
         label.setStyleSheet("QLabel { color : blue; }")
 
         # allow the player to either choose from a dropdown menu of existing objects, or add a new one
-        objectList = self.logic.getListOfAllObjectNames()
+        objectList = self.data.getListOfAllObjectNames()
 
         self.comboBox = QComboBox()
         self.comboBox.setFont(QFont("Arial", 12))

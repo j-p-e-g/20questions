@@ -141,7 +141,6 @@ class GameLogic():
                     maybeProperties.append(identifier)
 
             objEntry = {}
-            objEntry["article"] = obj["article"]
             objEntry["properties"] = {}
 
             objEntry["properties"][self.yesValueText] = yesProperties
@@ -400,11 +399,3 @@ class GameLogic():
     def updateData(self, _solution):
         self.data.addOrUpdateObject(_solution, self.properties)
         self.data.saveObjects()
-
-    def getListOfAllObjectNames(self):
-        list = []
-
-        for objName, objEntry in sorted(self.objects.items()):
-            list.append(objEntry["article"] + " " + objName)
-
-        return list

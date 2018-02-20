@@ -10,8 +10,9 @@ class DisambiguationStateWidget(QWidget):
         super().__init__()
 
         self.logic = _logic
+        self.data = self.logic.data
         self.messageHistory = self.logic.messageHistory
-        self.phrasing = self.logic.data.phrasing
+        self.phrasing = self.data.phrasing
 
         self.displayDisambiguationState(_newObjName, _oldObjName)
 
@@ -34,6 +35,7 @@ class DisambiguationStateWidget(QWidget):
         self.verbComboBox.addItem("can")
         self.verbComboBox.addItem("does")
         self.verbComboBox.addItem("is")
+        self.verbComboBox.currentIndexChanged.connect(self.onVerbComboBoxIndexChanged)
 
         self.toggleNotButton = QPushButton("(not)", self)
         self.toggleNotButton.setFont(QFont("Arial", 12))
@@ -52,6 +54,16 @@ class DisambiguationStateWidget(QWidget):
 
         sentenceStartWidget = QWidget(self)
         sentenceStartWidget.setLayout(hLayoutStart)
+
+        # allow the player to either choose from a dropdown menu of existing objects, or add a new one
+        self.suffixComboBox = QComboBox()
+        self.suffixComboBox.setFont(QFont("Arial", 12))
+        self.fillSuffixComboBox()
+        self.suffixComboBox.currentIndexChanged.connect(self.onSuffixComboBoxIndexChanged)
+
+        orLabel = QLabel("or", self)
+        orLabel.setFont(QFont("Arial", 12))
+        orLabel.setAlignment(Qt.AlignCenter)
 
         self.suffixTextBox = QLineEdit(self)
         self.suffixTextBox.setFont(QFont("Arial", 12))
@@ -74,6 +86,8 @@ class DisambiguationStateWidget(QWidget):
 
         vLayout = QVBoxLayout()
         vLayout.addWidget(sentenceStartWidget)
+        vLayout.addWidget(self.suffixComboBox)
+        vLayout.addWidget(orLabel)
         vLayout.addWidget(sentenceEndWidget)
 
         sentenceWidget = QWidget(self)
@@ -96,6 +110,22 @@ class DisambiguationStateWidget(QWidget):
         widget = BoxWidget([queryLabel, emptyLabel, sentenceWidget, self.sendButton, emptyLabel, emptyLabel, emptyLabel, skipButton])
         layout.addWidget(widget)
 
+    def onVerbComboBoxIndexChanged(self, index):
+        # update suffix dropdown menu every time the modal verb changes
+        self.fillSuffixComboBox()
+
+    def fillSuffixComboBox(self):
+        modalVerb = self.verbComboBox.currentText()
+
+        self.suffixComboBox.clear()
+        self.suffixComboBox.addItem("(existing attribute)")
+
+        # add new entries
+        propertyList = self.data.getListOfAllSuffixesMatchingVerb(modalVerb)
+
+        for suffix in propertyList:
+            self.suffixComboBox.addItem(suffix)
+
     def onToggledNotButton(self, _down):
         if _down:
             self.toggleNotButton.setText("NOT")
@@ -104,10 +134,24 @@ class DisambiguationStateWidget(QWidget):
             self.toggleNotButton.setText("(not)")
             self.toggleNotButton.setStyleSheet("color: gray")
 
+    def onSuffixComboBoxIndexChanged(self, index):
+        if index != 0:
+            self.suffixTextBox.setText("")
+
+        self.updateSendButton()
+
     def onTextInputChanged(self):
-        suffix = self.suffixTextBox.text()
-        isEmpty = (suffix == "")
-        self.sendButton.setEnabled(not isEmpty)
+        if self.suffixTextBox.text() != "":
+            self.suffixComboBox.setCurrentIndex(0)
+
+        self.updateSendButton()
+
+    def updateSendButton(self):
+        if self.suffixComboBox.currentIndex() > 0:
+            self.sendButton.setEnabled(True)
+        else:
+            isEmpty = (self.suffixTextBox.text() == "")
+            self.sendButton.setEnabled(not isEmpty)
 
     def onPropertySent(self):
         modalVerb, notValue, suffix = self.getValues()
@@ -119,11 +163,15 @@ class DisambiguationStateWidget(QWidget):
 
     def getValues(self):
         modalVerb = self.verbComboBox.currentText()
-        suffix = self.suffixTextBox.text()
 
         notValue = False
         if self.toggleNotButton.isChecked():
             notValue = True
+
+        if self.suffixComboBox.currentIndex() > 0:
+            suffix = self.suffixComboBox.currentText()
+        else:
+            suffix = self.suffixTextBox.text()
 
         return modalVerb, notValue, suffix
 
