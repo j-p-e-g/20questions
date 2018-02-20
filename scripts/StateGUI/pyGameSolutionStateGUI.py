@@ -24,13 +24,16 @@ class SolutionStateWidget(QWidget):
         label.setStyleSheet("QLabel { color : blue; }");
 
         self.solutionTextBox = QLineEdit(self)
+        self.solutionTextBox.textChanged.connect(self.onTextInputChanged)
+
         noNumRegex = QRegExp("[a-zA-Z\s-]+")
         self.solutionTextBox.setValidator(QRegExpValidator(noNumRegex, self.solutionTextBox))
 
-        buttonText = self.phrasing.constructSolutionButtonText()
-        button = QPushButton(buttonText, self)
-        button.setFont(QFont("Arial", 12))
-        button.clicked.connect(self.onSolutionSent)
+        sendButtonText = self.phrasing.constructSolutionButtonText()
+        self.sendButton = QPushButton(sendButtonText, self)
+        self.sendButton.setFont(QFont("Arial", 12))
+        self.sendButton.setEnabled(False)
+        self.sendButton.clicked.connect(self.onSolutionSent)
 
         emptyLabel = QLabel("", self)
 
@@ -42,19 +45,19 @@ class SolutionStateWidget(QWidget):
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([label, self.solutionTextBox, button, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
+        widget = BoxWidget([label, self.solutionTextBox, self.sendButton, emptyLabel, emptyLabel, emptyLabel, buttonRestart])
         layout.addWidget(widget)
+
+    def onTextInputChanged(self):
+        solution = self.solutionTextBox.text()
+        isEmpty = (solution == "")
+        self.sendButton.setEnabled(not isEmpty)
 
     def onSolutionSent(self):
         solution = self.solutionTextBox.text()
-        if len(solution) > 0:
-            self.messageHistory.addPlayerMessage(solution)
-            self.logic.inputEvent.onSolutionSent.emit(solution)
-            self.close()
-        else:
-            msg = "Type the name of your object"
-            self.messageHistory.addProgramMessage(msg)
-            print(msg)
+        self.messageHistory.addPlayerMessage(solution)
+        self.logic.inputEvent.onSolutionSent.emit(solution)
+        self.close()
 
     def onRestart(self):
         buttonText = self.sender().text()

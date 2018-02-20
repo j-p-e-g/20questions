@@ -55,6 +55,7 @@ class DisambiguationStateWidget(QWidget):
 
         self.suffixTextBox = QLineEdit(self)
         self.suffixTextBox.setFont(QFont("Arial", 12))
+        self.suffixTextBox.textChanged.connect(self.onTextInputChanged)
 
         sizePolicy = self.suffixTextBox.sizePolicy();
         sizePolicy.setHorizontalStretch(1);
@@ -79,19 +80,20 @@ class DisambiguationStateWidget(QWidget):
         sentenceWidget.setLayout(vLayout)
 
         buttonSendText = self.phrasing.constructDisambiguationButtonText()
-        buttonSend = QPushButton(buttonSendText, self)
-        buttonSend.setFont(QFont("Arial", 12))
-        buttonSend.clicked.connect(self.onPropertySent)
+        self.sendButton = QPushButton(buttonSendText, self)
+        self.sendButton.setFont(QFont("Arial", 12))
+        self.sendButton.clicked.connect(self.onPropertySent)
+        self.sendButton.setEnabled(False)
 
-        buttonSkipText = self.phrasing.constructSkipDisambiguationButtonText()
-        buttonSkip = QPushButton(buttonSkipText, self)
-        buttonSkip.setFont(QFont("Arial", 12))
-        buttonSkip.clicked.connect(self.onSkipDisambiguation)
+        skipButtonText = self.phrasing.constructSkipDisambiguationButtonText()
+        skipButton = QPushButton(skipButtonText, self)
+        skipButton.setFont(QFont("Arial", 12))
+        skipButton.clicked.connect(self.onSkipDisambiguation)
 
         layout = QStackedLayout()
         self.setLayout(layout)
 
-        widget = BoxWidget([queryLabel, emptyLabel, sentenceWidget, buttonSend, emptyLabel, emptyLabel, emptyLabel, buttonSkip])
+        widget = BoxWidget([queryLabel, emptyLabel, sentenceWidget, self.sendButton, emptyLabel, emptyLabel, emptyLabel, skipButton])
         layout.addWidget(widget)
 
     def onToggledNotButton(self, _down):
@@ -101,6 +103,11 @@ class DisambiguationStateWidget(QWidget):
         else:
             self.toggleNotButton.setText("(not)")
             self.toggleNotButton.setStyleSheet("color: gray")
+
+    def onTextInputChanged(self):
+        suffix = self.suffixTextBox.text()
+        isEmpty = (suffix == "")
+        self.sendButton.setEnabled(not isEmpty)
 
     def onPropertySent(self):
         modalVerb, notValue, suffix = self.getValues()
