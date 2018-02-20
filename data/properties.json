@@ -13,7 +13,7 @@
         {
             "identifier": 3,
             "modal_verb": "is",
-            "suffix": "a vehicle"
+            "suffix": "a type of fruit"
         },
         {
             "identifier": 4,
@@ -22,8 +22,103 @@
         },
         {
             "identifier": 5,
+            "modal_verb": "does",
+            "suffix": "have edible peel"
+        },
+        {
+            "identifier": 6,
             "modal_verb": "is",
-            "suffix": "a type of fruit"
+            "suffix": "a vehicle"
+        },
+        {
+            "identifier": 7,
+            "modal_verb": "is",
+            "suffix": "a fantastic creature"
+        },
+        {
+            "identifier": 8,
+            "modal_verb": "does",
+            "suffix": "taste sweet"
+        },
+        {
+            "identifier": 9,
+            "modal_verb": "can",
+            "suffix": "be encountered in space"
+        },
+        {
+            "identifier": 10,
+            "modal_verb": "is",
+            "suffix": "a type of building"
+        },
+        {
+            "identifier": 11,
+            "modal_verb": "does",
+            "suffix": "live in water"
+        },
+        {
+            "identifier": 12,
+            "modal_verb": "is",
+            "suffix": "a mammal"
+        },
+        {
+            "identifier": 13,
+            "modal_verb": "is",
+            "suffix": "commonly kept as a pet"
+        },
+        {
+            "identifier": 14,
+            "modal_verb": "is",
+            "suffix": "a type of bird"
+        },
+        {
+            "identifier": 15,
+            "modal_verb": "is",
+            "suffix": "a snack"
+        },
+        {
+            "identifier": 16,
+            "modal_verb": "is",
+            "suffix": "a type of tool"
+        },
+        {
+            "identifier": 17,
+            "modal_verb": "does",
+            "suffix": "emit light"
+        },
+        {
+            "identifier": 18,
+            "modal_verb": "is",
+            "suffix": "a musical instrument"
+        },
+        {
+            "identifier": 19,
+            "modal_verb": "is",
+            "suffix": "a type of clothing"
+        },
+        {
+            "identifier": 20,
+            "modal_verb": "is",
+            "suffix": "a fish"
+        },
+        {
+            "identifier": 21,
+            "modal_verb": "does",
+            "suffix": "have wings"
+        },
+        {
+            "identifier": 22,
+            "modal_verb": "is",
+            "suffix": "an electronic device"
+        },
+        {
+            "identifier": 23,
+            "modal_verb": "is",
+            "suffix": "a type of furniture"
+        },
+        {
+            "identifier": 24,
+            "modal_verb": "can",
+            "suffix": "be read"
         }
     ]
 }
