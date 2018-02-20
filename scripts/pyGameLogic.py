@@ -9,6 +9,7 @@ class InputEvent(QObject):
     onQuestionAnswered = pyqtSignal(str)
     onGuessReaction = pyqtSignal(bool)
     onSolutionSent = pyqtSignal(str)
+    onPropertySent = pyqtSignal(str, bool, str)
     onRestart = pyqtSignal()
 
 
@@ -16,6 +17,7 @@ class GuessEvent(QObject):
     onGuessSent = pyqtSignal(str)
     onQuestionSent = pyqtSignal(str)
     onRequestSolution = pyqtSignal()
+    onRequestDisambiguation = pyqtSignal(str, str)
     onRoundFinished = pyqtSignal()
 
 
@@ -47,6 +49,7 @@ class GameLogic():
         self.inputEvent.onQuestionAnswered.connect(self.onReceivedQuestionAnswer)
         self.inputEvent.onGuessReaction.connect(self.onReceivedGuessResponse)
         self.inputEvent.onSolutionSent.connect(self.onReceivedSolution)
+        self.inputEvent.onPropertySent.connect(self.onReceivedDisambiguation)
         self.inputEvent.onRestart.connect(self.onRestart)
 
         self.debugEvent.onObjectsUpdated.connect(self.updateScores)
@@ -366,6 +369,24 @@ class GameLogic():
 
     def onReceivedSolution(self, _solution):
         self.updateData(_solution)
+
+        if self.data.latestObject != "" and len(self.guesses) > 0:
+
+            self.bestGuess = self.guesses[0]
+            if self.data.latestObject != self.bestGuess:
+                newObj = self.data.getNameWithArticle(self.data.latestObject)
+                oldObj = self.data.getNameWithArticle(self.bestGuess)
+                self.guessEvent.onRequestDisambiguation.emit(newObj, oldObj)
+                return
+
+        self.onRestart()
+
+    def onReceivedDisambiguation(self, _modalVerb, _answer, _suffix):
+        print("verb: " + _modalVerb)
+        print("answer: " + str(_answer))
+        print("suffix: " + _suffix)
+
+        # TODO: add to properties, update objects
         self.onRestart()
 
     def updateData(self, _solution):

@@ -20,6 +20,8 @@ class GameData():
         self.objects = {}
         self.properties = {}
 
+        self.latestObject = ""
+
         self.initData()
 
     def initData(self):
@@ -40,6 +42,7 @@ class GameData():
     def addOrUpdateObject(self, _name, _allProperties):
 
         article, noun = self.phrasing.splitStringIntoArticleAndNoun(_name)
+        self.latestObject = noun
 
         if self.objectsMainAttribute in self.objects:
             for obj in self.objects[self.objectsMainAttribute]:
@@ -140,6 +143,13 @@ class GameData():
     def saveProperties(self):
         with open(PROPERTIES_DATA_FILE, "w") as outfile:
             json.dump(self.properties, outfile, indent=4)
+
+    def getNameWithArticle(self, _objectName):
+        for prop in self.objects[self.objectsMainAttribute]:
+            if prop["name"] == _objectName:
+                return prop["article"] + " " + prop["name"]
+
+        return ""
 
     def constructQuestion(self, _propIdentifier):
         for prop in self.properties[self.propertiesMainAttribute]:

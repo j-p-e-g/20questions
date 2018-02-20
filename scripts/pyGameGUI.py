@@ -7,6 +7,7 @@ import StateGUI.pyGameStartStateGUI as startState
 import StateGUI.pyGameQuestionStateGUI as questionState
 import StateGUI.pyGameGuessStateGUI as guessState
 import StateGUI.pyGameSolutionStateGUI as solutionState
+import StateGUI.pyGameDisambiguationStateGUI as disambiguationState
 
 
 # application main window
@@ -21,6 +22,7 @@ class MainWindow(QMainWindow):
         self.logic.guessEvent.onGuessSent.connect(self.onReceivedGuess)
         self.logic.guessEvent.onQuestionSent.connect(self.onReceivedQuestion)
         self.logic.guessEvent.onRequestSolution.connect(self.onSolutionRequested)
+        self.logic.guessEvent.onRequestDisambiguation.connect(self.onDisambiguationRequested)
         self.logic.guessEvent.onRoundFinished.connect(self.onRoundFinished)
 
         self.initWindow()
@@ -49,6 +51,10 @@ class MainWindow(QMainWindow):
 
     def onSolutionRequested(self):
         self.setCentralWidget(solutionState.SolutionStateWidget(self.logic))
+        self.show()
+
+    def onDisambiguationRequested(self, _newObjName, _oldObjName):
+        self.setCentralWidget(disambiguationState.DisambiguationStateWidget(self.logic, _newObjName, _oldObjName))
         self.show()
 
     def onRoundFinished(self):

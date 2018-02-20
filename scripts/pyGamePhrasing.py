@@ -48,8 +48,14 @@ class GamePhrasing():
     def constructSolutionButtonText(self):
         return "Add object"
 
-    def constructPropertyButtonText(self):
-        return "Add attribute"
+    def constructDisambiguationRequest(self, _newObjName, _oldObjName):
+        return "How can I distinguish " + _newObjName + " from " + _oldObjName + "?"
+
+    def constructDisambiguationButtonText(self):
+        return "Add distinction"
+
+    def constructSkipDisambiguationButtonText(self):
+        return "I don't know. Just keep guessing!"
 
     def constructRestartButtonText(self):
         return "Restart"
