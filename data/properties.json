@@ -119,6 +119,106 @@
             "identifier": 24,
             "modal_verb": "can",
             "suffix": "be read"
+        },
+        {
+            "identifier": 25,
+            "modal_verb": "is",
+            "suffix": "a vegetable"
+        },
+        {
+            "identifier": 26,
+            "modal_verb": "is",
+            "suffix": "a string instrument"
+        },
+        {
+            "identifier": 27,
+            "modal_verb": "does",
+            "suffix": "eat meat"
+        },
+        {
+            "identifier": 28,
+            "modal_verb": "is",
+            "suffix": "green"
+        },
+        {
+            "identifier": 29,
+            "modal_verb": "is",
+            "suffix": "round"
+        },
+        {
+            "identifier": 30,
+            "modal_verb": "does",
+            "suffix": "have an engine"
+        },
+        {
+            "identifier": 31,
+            "modal_verb": "is",
+            "suffix": "often considered vermin"
+        },
+        {
+            "identifier": 32,
+            "modal_verb": "can",
+            "suffix": "be used to write something"
+        },
+        {
+            "identifier": 33,
+            "modal_verb": "can",
+            "suffix": "be used for entertainment"
+        },
+        {
+            "identifier": 34,
+            "modal_verb": "is",
+            "suffix": "a weapon"
+        },
+        {
+            "identifier": 35,
+            "modal_verb": "does",
+            "suffix": "natively live in Africa"
+        },
+        {
+            "identifier": 36,
+            "modal_verb": "is",
+            "suffix": "a type of container"
+        },
+        {
+            "identifier": 37,
+            "modal_verb": "is",
+            "suffix": "a type of insect"
+        },
+        {
+            "identifier": 38,
+            "modal_verb": "is",
+            "suffix": "a type of cutlery"
+        },
+        {
+            "identifier": 39,
+            "modal_verb": "is",
+            "suffix": "black"
+        },
+        {
+            "identifier": 40,
+            "modal_verb": "can",
+            "suffix": "float"
+        },
+        {
+            "identifier": 41,
+            "modal_verb": "does",
+            "suffix": "natively live in cold climate"
+        },
+        {
+            "identifier": 42,
+            "modal_verb": "is",
+            "suffix": "a common source of food"
+        },
+        {
+            "identifier": 43,
+            "modal_verb": "does",
+            "suffix": "contain meat"
+        },
+        {
+            "identifier": 44,
+            "modal_verb": "is",
+            "suffix": "worn on the upper body"
         }
     ]
 }

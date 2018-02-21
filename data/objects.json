@@ -31,6 +31,14 @@
                 {
                     "identifier": 9,
                     "value": 1
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
                 }
             ]
         },
@@ -49,6 +57,58 @@
                 {
                     "identifier": 3,
                     "value": 1
+                },
+                {
+                    "identifier": 4,
+                    "value": 1
+                },
+                {
+                    "identifier": 5,
+                    "value": 2
+                },
+                {
+                    "identifier": 8,
+                    "value": 1
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 21,
+                    "value": 2
+                },
+                {
+                    "identifier": 31,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 30,
+                    "value": 2
+                },
+                {
+                    "identifier": 35,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 2
                 }
             ]
         },
@@ -84,7 +144,7 @@
         },
         {
             "article": "a",
-            "name": "bird",
+            "name": "sparrow",
             "properties": [
                 {
                     "identifier": 1,
@@ -104,6 +164,22 @@
                 },
                 {
                     "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 1
+                },
+                {
+                    "identifier": 39,
+                    "value": 2
+                },
+                {
+                    "identifier": 42,
                     "value": 2
                 }
             ]
@@ -157,6 +233,18 @@
                 {
                     "identifier": 4,
                     "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
                 }
             ]
         },
@@ -191,6 +279,14 @@
                 {
                     "identifier": 13,
                     "value": 1
+                },
+                {
+                    "identifier": 27,
+                    "value": 1
+                },
+                {
+                    "identifier": 31,
+                    "value": 2
                 }
             ]
         },
@@ -217,6 +313,26 @@
                 {
                     "identifier": 5,
                     "value": 1
+                },
+                {
+                    "identifier": 8,
+                    "value": 1
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
                 }
             ]
         },
@@ -243,6 +359,58 @@
                 {
                     "identifier": 5,
                     "value": 2
+                },
+                {
+                    "identifier": 8,
+                    "value": 1
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 21,
+                    "value": 2
+                },
+                {
+                    "identifier": 31,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 30,
+                    "value": 2
+                },
+                {
+                    "identifier": 35,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 1
                 }
             ]
         },
@@ -272,6 +440,10 @@
                 },
                 {
                     "identifier": 6,
+                    "value": 1
+                },
+                {
+                    "identifier": 30,
                     "value": 1
                 }
             ]
@@ -345,6 +517,18 @@
                 {
                     "identifier": 8,
                     "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 43,
+                    "value": 1
                 }
             ]
         },
@@ -595,6 +779,10 @@
                 {
                     "identifier": 20,
                     "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
                 }
             ]
         },
@@ -652,6 +840,14 @@
                 },
                 {
                     "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 2
+                },
+                {
+                    "identifier": 42,
                     "value": 2
                 }
             ]
@@ -859,6 +1055,10 @@
                 {
                     "identifier": 24,
                     "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
                 }
             ]
         },
@@ -999,6 +1199,22 @@
                 {
                     "identifier": 22,
                     "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 2
+                },
+                {
+                    "identifier": 38,
+                    "value": 2
                 }
             ]
         },
@@ -1069,6 +1285,14 @@
                 {
                     "identifier": 16,
                     "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 2
                 }
             ]
         },
@@ -1388,6 +1612,10 @@
                 },
                 {
                     "identifier": 20,
+                    "value": 2
+                },
+                {
+                    "identifier": 37,
                     "value": 2
                 }
             ]
@@ -1761,6 +1989,10 @@
                 {
                     "identifier": 23,
                     "value": 1
+                },
+                {
+                    "identifier": 36,
+                    "value": 2
                 }
             ]
         },
@@ -1858,6 +2090,10 @@
                 },
                 {
                     "identifier": 23,
+                    "value": 2
+                },
+                {
+                    "identifier": 26,
                     "value": 2
                 }
             ]
@@ -1960,6 +2196,2016 @@
                 },
                 {
                     "identifier": 24,
+                    "value": 1
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 33,
+                    "value": 1
+                },
+                {
+                    "identifier": 36,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "carrot",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 1
+                },
+                {
+                    "identifier": 5,
+                    "value": 1
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 1
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "shirt",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "violin",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 1
+                },
+                {
+                    "identifier": 26,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "helicopter",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 21,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "horse",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 1
+                },
+                {
+                    "identifier": 27,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "parrot",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 1
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 24,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "ladybird",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 21,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 24,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "cucumber",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 1
+                },
+                {
+                    "identifier": 5,
+                    "value": 1
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "balloon",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 5,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 21,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "computer",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "lion",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 1
+                },
+                {
+                    "identifier": 35,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "bike",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 1
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 30,
+                    "value": 2
+                },
+                {
+                    "identifier": 40,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "sun",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 1
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "star",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 1
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "rat",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 1
+                },
+                {
+                    "identifier": 27,
+                    "value": 1
+                },
+                {
+                    "identifier": 31,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "ring",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 33,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "pencil",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "movie",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 33,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "sword",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "knife",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 3,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "wolf",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 1
+                },
+                {
+                    "identifier": 35,
+                    "value": 2
+                },
+                {
+                    "identifier": 41,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "goldfish",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 1
+                },
+                {
+                    "identifier": 12,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                },
+                {
+                    "identifier": 20,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "duck",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 3
+                },
+                {
+                    "identifier": 14,
+                    "value": 1
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 24,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "dolphin",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 1
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "bottle",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 1
+                },
+                {
+                    "identifier": 23,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "cockroach",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 2
+                },
+                {
+                    "identifier": 20,
+                    "value": 2
+                },
+                {
+                    "identifier": 37,
+                    "value": 1
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "pot",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "gun",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "table",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "tomato",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 1
+                },
+                {
+                    "identifier": 5,
+                    "value": 1
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "fork",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 2
+                },
+                {
+                    "identifier": 38,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "spoon",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 1
+                },
+                {
+                    "identifier": 22,
+                    "value": 2
+                },
+                {
+                    "identifier": 32,
+                    "value": 2
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "crow",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 14,
+                    "value": 1
+                },
+                {
+                    "identifier": 39,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "boat",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 1
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 30,
+                    "value": 3
+                },
+                {
+                    "identifier": 40,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "watch",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 3
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 22,
+                    "value": 3
+                },
+                {
+                    "identifier": 34,
+                    "value": 2
+                },
+                {
+                    "identifier": 33,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "bed",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 23,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "shoe",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 1
+                },
+                {
+                    "identifier": 44,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "polar bear",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 1
+                },
+                {
+                    "identifier": 35,
+                    "value": 2
+                },
+                {
+                    "identifier": 41,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "cow",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 12,
+                    "value": 1
+                },
+                {
+                    "identifier": 13,
+                    "value": 2
+                },
+                {
+                    "identifier": 27,
+                    "value": 2
+                },
+                {
+                    "identifier": 42,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "chicken",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 1
+                },
+                {
+                    "identifier": 2,
+                    "value": 1
+                },
+                {
+                    "identifier": 7,
+                    "value": 2
+                },
+                {
+                    "identifier": 11,
+                    "value": 2
+                },
+                {
+                    "identifier": 13,
+                    "value": 3
+                },
+                {
+                    "identifier": 14,
+                    "value": 1
+                },
+                {
+                    "identifier": 39,
+                    "value": 2
+                },
+                {
+                    "identifier": 42,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "window",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 23,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "wardrobe",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 36,
+                    "value": 1
+                },
+                {
+                    "identifier": 23,
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "bag",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 2
+                },
+                {
+                    "identifier": 23,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "mushroom",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 1
+                },
+                {
+                    "identifier": 8,
+                    "value": 2
+                },
+                {
+                    "identifier": 25,
+                    "value": 2
+                },
+                {
+                    "identifier": 28,
+                    "value": 2
+                },
+                {
+                    "identifier": 29,
+                    "value": 3
+                },
+                {
+                    "identifier": 43,
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "article": "a",
+            "name": "scarf",
+            "properties": [
+                {
+                    "identifier": 1,
+                    "value": 2
+                },
+                {
+                    "identifier": 2,
+                    "value": 2
+                },
+                {
+                    "identifier": 4,
+                    "value": 2
+                },
+                {
+                    "identifier": 6,
+                    "value": 2
+                },
+                {
+                    "identifier": 9,
+                    "value": 2
+                },
+                {
+                    "identifier": 10,
+                    "value": 2
+                },
+                {
+                    "identifier": 16,
+                    "value": 2
+                },
+                {
+                    "identifier": 17,
+                    "value": 2
+                },
+                {
+                    "identifier": 18,
+                    "value": 2
+                },
+                {
+                    "identifier": 19,
+                    "value": 1
+                },
+                {
+                    "identifier": 44,
                     "value": 1
                 }
             ]
