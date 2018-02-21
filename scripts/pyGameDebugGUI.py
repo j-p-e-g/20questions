@@ -75,7 +75,7 @@ class DebugPropertyTab(scrollBar.ScrollBar):
         for propId, propEntry in sorted(untriedProperties.items(), key = sortByScore, reverse = True):
             question = self.data.constructQuestion(propId) + " (" + str(propId) + ")"
             display.append("<h4>" + question + "</h4>")
-            display.append("Score: " + "{:.2f}".format(propEntry["score"]))
+            display.append("Score: " + "{:.4f}".format(propEntry["score"]))
 
             objects = propEntry["objects"]
             if len(objects[self.logic.yesValueText]) > 0:
@@ -125,7 +125,7 @@ class DebugObjectTab(scrollBar.ScrollBar):
         objScore = _objEntry["score"]
         objProperties = _objEntry["properties"]
 
-        _display.append("<b>Score: " + "{:.2f}".format(objScore) + "</b>")
+        _display.append("<b>Score: " + "{:.4f}".format(objScore) + "</b>")
 
         for prop in objProperties[yesValueText]:
             propEntry = self.logic.properties[prop]

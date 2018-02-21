@@ -1,8 +1,8 @@
 from PyQt5.QtCore import QObject, pyqtSignal
+from random import randint
 
 import pyGameMessageHistory as msgHistory
 from pyGameGlobals import *
-
 
 class InputEvent(QObject):
     onGameStart = pyqtSignal()
@@ -156,13 +156,14 @@ class GameLogic():
             print("\nupdatePropertyScore")
 
         countTotalObjects = len(self.objects) + 2
+        numCandidates = len(self.objectCandidates)
 
         for propId in self.properties:
             propEntry = self.properties[propId]
 
             objects = propEntry["objects"]
-            countYes = 1
-            countNo = 1
+            countYes = 0
+            countNo = 0
 
             for objYes in objects[self.yesValueText]:
                 if objYes in self.objectCandidates:
@@ -172,7 +173,13 @@ class GameLogic():
                 if objNo in self.objectCandidates:
                     countNo = countNo + 1
 
-            score = (countYes/countTotalObjects) * (countNo/countTotalObjects)
+            # Apply a score of zero if the question won't give further information
+            # because the answer won't exclude any of the remaining candidates.
+            if countYes == 0 or countNo == 0:
+                score = 0
+            else:
+                score = (countYes+1)/countTotalObjects * (countNo+1)/countTotalObjects
+
             propEntry["score"] = score
 
             if self.debugPropertyScore:
@@ -237,24 +244,25 @@ class GameLogic():
         # 5. when you run out of questions, guess
         # 6. if neither asking nor guessing are possible (or make sense) anymore, ask for the solution
 
-        if self.numCurrentGuess < MAX_NUM_GUESSES and len(self.objectCandidates) == 1:
-            if self.setupGuess(self.objectCandidates[0]):
+        if len(self.objectCandidates) > 0:
+            if self.numCurrentGuess < MAX_NUM_GUESSES and len(self.objectCandidates) == 1:
+                if self.setupGuess(self.objectCandidates[0]):
+                    return
+
+            # ask questions to narrow down the solution space
+            if self.numCurrentQuestion < MAX_NUM_QUESTIONS and self.tryFindGoodQuestion():
                 return
 
-        # ask questions to narrow down the solution space
-        if self.numCurrentQuestion < MAX_NUM_QUESTIONS and self.tryFindGoodQuestion():
-            return
-
-        # guess the object
-        if self.numCurrentGuess < MAX_NUM_GUESSES and self.tryFindGoodGuess():
-            return
+            # guess the object
+            if self.numCurrentGuess < MAX_NUM_GUESSES and self.tryFindGoodGuess():
+                return
 
         # if nothing else works, ask for the solution
         self.guessEvent.onRequestSolution.emit()
 
     def tryFindGoodQuestion(self):
-        bestProperty = -1
-        bestScore = -1
+        bestPropertyCandidates = []
+        bestScore = 0
 
         for identifier in self.properties:
             propEntry = self.properties[identifier]
@@ -262,31 +270,43 @@ class GameLogic():
                 continue
 
             score = propEntry["score"]
-            if score > bestScore:
-                bestProperty = identifier
-                bestScore = score
 
-        if bestProperty == -1:
+            # don't bother with properties that have a score of 0
+            if score == 0:
+                continue
+
+            if score > bestScore:
+                bestPropertyCandidates = [identifier]
+                bestScore = score
+            elif score == bestScore:
+                bestPropertyCandidates.append(identifier)
+
+        if len(bestPropertyCandidates) == 0:
             return False
 
+        bestPropertyIndex = randint(0, len(bestPropertyCandidates)-1)
+        return self.setupQuestion(bestPropertyCandidates[bestPropertyIndex])
+
+    def setupQuestion(self, bestProperty):
+
         question = self.data.constructQuestion(bestProperty)
-        if question != "":
-            self.previousQuestion = bestProperty
+        if question == "":
+            return False
 
-            self.numCurrentQuestion = self.numCurrentQuestion + 1
-            self.messageHistory.addProgramMessage(str(self.numCurrentQuestion) + ". question: " + question)
-            self.guessEvent.onQuestionSent.emit(question)
+        self.previousQuestion = bestProperty
 
-            propEntry = self.properties[bestProperty]
-            propEntry["order"] = self.numCurrentQuestion
+        self.numCurrentQuestion = self.numCurrentQuestion + 1
+        self.messageHistory.addProgramMessage(str(self.numCurrentQuestion) + ". question: " + question)
+        self.guessEvent.onQuestionSent.emit(question)
 
-            self.debugEvent.onPropertiesUpdated.emit()
-            return True
+        propEntry = self.properties[bestProperty]
+        propEntry["order"] = self.numCurrentQuestion
 
-        return False
+        self.debugEvent.onPropertiesUpdated.emit()
+        return True
 
     def tryFindGoodGuess(self):
-        bestGuess = ""
+        bestGuessCandidates = []
         bestScore = -1
 
         for objName in self.objectCandidates:
@@ -297,12 +317,15 @@ class GameLogic():
                 score = self.objects[objName]["score"]
                 if score > bestScore:
                     bestScore = score
-                    bestGuess = objName
+                    bestGuessCandidates = [objName]
+                elif score == bestScore:
+                    bestGuessCandidates.append(objName)
 
-        if bestGuess == "":
+        if len(bestGuessCandidates) == 0:
             return False
 
-        return self.setupGuess(bestGuess)
+        bestGuessIndex = randint(0, len(bestGuessCandidates)-1)
+        return self.setupGuess(bestGuessCandidates[bestGuessIndex])
 
     def setupGuess(self, bestGuess):
         guessText = self.data.constructGuess(bestGuess)
