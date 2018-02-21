@@ -78,10 +78,20 @@ class DebugPropertyTab(scrollBar.ScrollBar):
             display.append("Score: " + "{:.4f}".format(propEntry["score"]))
 
             objects = propEntry["objects"]
-            if len(objects[self.logic.yesValueText]) > 0:
-                display.append(self.logic.yesValueText + ": " + ", ".join(objects[self.logic.yesValueText]))
-            if len(objects[self.logic.noValueText]) > 0:
-                display.append(self.logic.noValueText + ": " + ", ".join(objects[self.logic.noValueText]))
+
+            yesFilteredObjects = []
+            noFilteredObjects = []
+
+            for objName in self.logic.objectCandidates:
+                if objName in objects[self.logic.yesValueText]:
+                    yesFilteredObjects.append(objName)
+                elif objName in objects[self.logic.noValueText]:
+                    noFilteredObjects.append(objName)
+
+            if len(yesFilteredObjects) > 0:
+                display.append(self.logic.yesValueText + ": " + ", ".join(yesFilteredObjects))
+            if len(noFilteredObjects) > 0:
+                display.append(self.logic.noValueText + ": " + ", ".join(noFilteredObjects))
 
         self.update(display)
 
