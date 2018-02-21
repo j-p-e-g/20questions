@@ -373,16 +373,26 @@ class GameLogic():
         self.nextRun()
 
     def onReceivedGuessResponse(self, _success):
+        if len(self.guesses) == 0:
+            errorMsg = "Guess got confirmed but is not stored!"
+            print(errorMsg)
+            self.messageHistory.addErrorMessage(errorMsg)
+            return
+
         prevGuess = self.guesses[len(self.guesses) - 1]
 
         if _success:
-            if len(self.guesses) == 0:
-                errorMsg = "Guess got confirmed but is not stored!"
-                print(errorMsg)
-                self.messageHistory.addErrorMessage(errorMsg)
+            self.updateData(prevGuess)
+
+            # try to find out why the first guess was wrong
+            self.bestGuess = self.guesses[0]
+            if prevGuess != self.bestGuess:
+                newObj = self.data.getNameWithArticle(prevGuess)
+                oldObj = self.data.getNameWithArticle(self.bestGuess)
+                self.guessEvent.onRequestDisambiguation.emit(newObj, oldObj)
                 return
 
-            self.updateData(prevGuess)
+            self.guessEvent.onRoundFinished.emit()
             self.onRestart()
         else:
             # keep asking
@@ -394,6 +404,7 @@ class GameLogic():
     def onReceivedSolution(self, _solution):
         self.updateData(_solution)
 
+        # try to find out why the first guess was wrong
         if self.data.latestObject != "" and len(self.guesses) > 0:
 
             self.bestGuess = self.guesses[0]

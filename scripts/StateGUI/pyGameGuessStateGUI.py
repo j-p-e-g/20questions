@@ -46,7 +46,6 @@ class GuessStateWidget(QWidget):
     def onAnswerGuessTrue(self):
         self.messageHistory.addPlayerMessage(self.sender().text())
         self.logic.inputEvent.onGuessReaction.emit(True)
-        self.logic.guessEvent.onRoundFinished.emit()
         self.close()
 
     def onAnswerGuessFalse(self):
