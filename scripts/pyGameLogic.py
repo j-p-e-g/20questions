@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QObject, pyqtSignal
 
 import pyGameMessageHistory as msgHistory
-from pyGameGlobals import KnowledgeValues
+from pyGameGlobals import *
 
 
 class InputEvent(QObject):
@@ -230,22 +230,23 @@ class GameLogic():
 
     def nextRun(self):
 
-        if len(self.objectCandidates) == 1:
-            if self.setupGuess(self.objectCandidates[0]):
-                return
-
         # 1. iterate over all properties for the current guess
         # 2. assign weights to each object
         # 3. if there's a single object matching all properties, guess!
         # 4. otherwise, ask a question that hasn't been asked before
-        # 5. if all questions were asked and no object matches, ask for the solution
+        # 5. when you run out of questions, guess
+        # 6. if neither asking nor guessing are possible (or make sense) anymore, ask for the solution
+
+        if self.numCurrentGuess < MAX_NUM_GUESSES and len(self.objectCandidates) == 1:
+            if self.setupGuess(self.objectCandidates[0]):
+                return
 
         # ask questions to narrow down the solution space
-        if self.tryFindGoodQuestion():
+        if self.numCurrentQuestion < MAX_NUM_QUESTIONS and self.tryFindGoodQuestion():
             return
 
         # guess the object
-        if self.tryFindGoodGuess():
+        if self.numCurrentGuess < MAX_NUM_GUESSES and self.tryFindGoodGuess():
             return
 
         # if nothing else works, ask for the solution
